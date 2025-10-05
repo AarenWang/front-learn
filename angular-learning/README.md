@@ -317,6 +317,322 @@ pnpm test
 
 > ✅ 实战：建立组件文档、性能监控与 A11y 检查清单，确保可维护与可靠性。
 
+#### 课时 11 · 大型应用架构模式
+- **知识纲要**：
+  1. 参考官方 [应用结构指南](https://angular.dev/guide/structure) 将项目划分为 `core`、`shared`、`features` 与 `infrastructure` 等层次，强调单向依赖与公共约束。
+  2. 引入 [Standalone 组合式架构](https://angular.dev/guide/standalone-components) 的特性，说明 `provideRouter`、`provideHttpClient` 在 `app.config.ts` 中集中配置的好处。
+  3. 借鉴社区对大型仓库（如 Nx、Angular 官方项目）的实践，演示如何通过「域驱动」划分边界，利用 `Route` 层懒加载隔离 Feature。
+- **完整案例：学习平台模块分层草图**
+  ```ts
+  // src/app/app.config.ts
+  import { ApplicationConfig, provideHttpClient } from '@angular/core'
+  import { provideRouter, withComponentInputBinding } from '@angular/router'
+  import { appRoutes } from './app.routes'
+  import { provideState, provideEffects } from '@ngrx/effects'
+  import { progressFeature } from './features/progress/data/progress.feature'
+
+  export const appConfig: ApplicationConfig = {
+    providers: [
+      provideRouter(appRoutes, withComponentInputBinding()),
+      provideHttpClient(),
+      provideState(progressFeature),
+      provideEffects(),
+    ],
+  }
+  ```
+  配套的目录结构图强调 `features/<domain>` 存放页面与 Facade，`shared/ui` 只导出无状态组件；在课堂上讨论依赖反转与公共工具的放置原则。
+- **课堂演示**：使用 VS Code Workspace Diagram 或 Nx Graph 查看依赖关系，实践 `eslint-plugin-boundaries` 配置禁止跨域引用，演练一次「新建学习计划 Feature」的完整流程。
+- **课后挑战**：为自己的项目绘制模块依赖图，识别潜在的循环依赖并提交重构方案。
+
+#### 课时 12 · 设计系统与可复用组件
+- **知识重点**：
+  - 对照 [Angular 样式与主题文档](https://angular.dev/guide/components/styles) 和 [Angular Material Theming](https://material.angular.io/guide/theming) 提炼令牌化的设计系统理念。
+  - 结合 CSS 变量、Tailwind、Angular CDK Overlay 等方案，讲解「设计 Tokens → 组件 → 模式」的层级关系。
+  - 强调可访问的 UI 组件需要考虑焦点轮廓、ARIA 属性、键盘操作，配合 Storybook/DocsPage 形成设计资产。
+- **完整案例：课程卡片组件 + 设计令牌**
+  ```ts
+  // src/app/shared/ui/course-card/course-card.component.ts
+  import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+
+  export interface CourseCard {
+    title: string
+    level: 'starter' | 'advanced'
+    duration: number
+    tags: string[]
+  }
+
+  @Component({
+    standalone: true,
+    selector: 'ui-course-card',
+    templateUrl: './course-card.component.html',
+    styleUrl: './course-card.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+      class: 'token-surface',
+      '[attr.data-level]': 'course.level',
+      role: 'article',
+    },
+  })
+  export class CourseCardComponent {
+    @Input({ required: true }) course!: CourseCard
+  }
+  ```
+  ```html
+  <!-- course-card.component.html -->
+  <header>
+    <h3>{{ course.title }}</h3>
+    <span class="token-badge">{{ course.level | titlecase }}</span>
+  </header>
+  <p>预计 {{ course.duration }} 小时</p>
+  <ul class="tag-list" aria-label="课程标签">
+    <li *ngFor="let tag of course.tags">#{{ tag }}</li>
+  </ul>
+  ```
+  ```scss
+  // course-card.component.scss
+  @use 'design-tokens' as *;
+
+  :host {
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  :host([data-level='advanced']) {
+    border-inline-start: 4px solid var(--color-accent);
+  }
+  ```
+  通过样式令牌文件统一主题，课程中演示如何在 Storybook 中生成文档页并自动化视觉回归。
+- **课堂演示**：演示 `pnpm dlx storybook init` 集成文档站，配置 `@storybook/addon-interactions` 与 `Angular CDK` 的 `FocusMonitor` 校验键盘导航。
+- **课后挑战**：扩展卡片组件支持 Skeleton Loading、收藏按钮与 slots，自定义主题切换（亮/暗）。
+
+#### 课时 13 · RxJS 与异步流管理
+- **知识重点**：
+  - 依照 [RxJS in Angular 指南](https://angular.dev/guide/rxjs) 深入讲解 `switchMap`、`exhaustMap`、`concatLatestFrom` 等高阶映射策略。
+  - 说明 Signals 与 RxJS 的协同，演示 `toSignal`、`fromSignal` 在组件内构建派生状态的模式。
+  - 强调可共享的查询服务需要缓存策略，结合 `shareReplay({ bufferSize: 1, refCount: true })` 与暂停/恢复机制。
+- **完整案例：实时学习看板数据流**
+  ```ts
+  // src/app/features/progress/data/progress.facade.ts
+  import { inject, Injectable, Signal, computed } from '@angular/core'
+  import { toSignal } from '@angular/core/rxjs-interop'
+  import { HttpClient } from '@angular/common/http'
+  import { map, retry, shareReplay, switchMap, timer } from 'rxjs'
+
+  interface ProgressResponse {
+    completed: number
+    total: number
+    velocity: number
+  }
+
+  @Injectable({ providedIn: 'root' })
+  export class ProgressFacade {
+    private readonly http = inject(HttpClient)
+
+    private readonly refresh$ = timer(0, 30_000)
+    private readonly progress$ = this.refresh$.pipe(
+      switchMap(() =>
+        this.http
+          .get<ProgressResponse>('/api/progress')
+          .pipe(retry({ count: 2 })),
+      ),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    )
+
+    readonly progress: Signal<ProgressResponse | null> = toSignal(
+      this.progress$,
+      { initialValue: null },
+    )
+
+    readonly completionRate = computed(() => {
+      const snapshot = this.progress()
+      return snapshot ? snapshot.completed / snapshot.total : 0
+    })
+  }
+  ```
+  案例串联轮询、错误重试、共享缓存与 Signal 派生，课堂上配合 Chrome DevTools Network 观察流量，并通过 `takeUntilDestroyed` 管理组件订阅。
+- **课堂演示**：借助 `marble testing` 工具（如 `rxjs-marbles`）可视化验证流组合逻辑，实践在组件中使用 `@let` 解构信号。
+- **课后挑战**：实现一个「乐观更新」场景：提交学习反馈前先更新 UI，失败时回滚并显示 Toast。
+
+#### 课时 14 · 测试体系与质量保障
+- **知识重点**：
+  - 对照官方 [测试指南](https://angular.dev/guide/testing) 梳理单元测试、组件测试、端到端测试的职责与边界。
+  - 比较 Jest、Vitest 与 Jasmine/Karma 的差异，演示如何使用 `@angular/core/testing` 的 `TestBed` 配置 Standalone 组件。
+  - 引入 Playwright/Cypress 等现代 E2E 工具，配合 `@angular-devkit/build-angular` 的 `builder` 进行 CI 集成。
+- **完整案例：组件 + 服务双测试覆盖**
+  ```ts
+  // src/app/features/progress/ui/progress-ring.component.spec.ts
+  import { render, screen } from '@testing-library/angular'
+  import { ProgressRingComponent } from './progress-ring.component'
+
+  describe('ProgressRingComponent', () => {
+    it('renders percentage text', async () => {
+      await render(ProgressRingComponent, {
+        componentInputs: { value: 0.75 },
+      })
+
+      expect(screen.getByText('75%')).toBeInTheDocument()
+    })
+  })
+  ```
+  ```ts
+  // src/app/features/progress/data/progress.facade.spec.ts
+  import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
+  import { TestBed } from '@angular/core/testing'
+  import { ProgressFacade } from './progress.facade'
+
+  describe('ProgressFacade', () => {
+    let facade: ProgressFacade
+    let httpMock: HttpTestingController
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        providers: [ProgressFacade],
+      })
+
+      facade = TestBed.inject(ProgressFacade)
+      httpMock = TestBed.inject(HttpTestingController)
+    })
+
+    it('hydrates progress from API', () => {
+      facade.progress()
+      const req = httpMock.expectOne('/api/progress')
+      req.flush({ completed: 6, total: 8, velocity: 1.2 })
+
+      expect(facade.completionRate()).toBeCloseTo(0.75)
+    })
+  })
+  ```
+  课堂展示「金字塔」测试结构，集成 GitHub Actions 运行 `pnpm test`, `pnpm lint`, `pnpm e2e`，并在 PR 模板中强制附带测试截图。
+- **课堂演示**：配置 Playwright 脚本访问 `http://localhost:4200/learning-dashboard`，断言课程卡片可见；介绍 `mockServiceWorker` 模拟后端。
+- **课后挑战**：为 Progress 流程写一份可复用的测试工具函数（如 `createProgressFixture`），并集成覆盖率门槛（80%+）。
+
+#### 课时 15 · 性能优化与可观测性
+- **知识重点**：
+  - 结合 [性能调优指南](https://angular.dev/guide/performance) 深入变更检测策略、信号派生、`trackBy`、延迟加载组件等手段。
+  - 解释路由分区、`importProvidersFrom`、`PreloadAllModules`/自定义预加载策略对首屏的影响，并引入 `ngx-quicklink` 等社区方案。
+  - 介绍浏览器性能监控与前端可观测性（Web Vitals、Sentry、OpenTelemetry），建立错误/性能仪表盘。
+- **完整案例：自定义预加载与性能日志埋点**
+  ```ts
+  // src/app/app.routes.ts
+  import { Route } from '@angular/router'
+  import { LearningDashboardComponent } from './pages/learning-dashboard/learning-dashboard.component'
+  import { selectivePreloading } from './shared/infrastructure/selective-preloading.strategy'
+
+  export const appRoutes: Route[] = [
+    {
+      path: '',
+      component: LearningDashboardComponent,
+      providers: [selectivePreloading({ include: ['progress'] })],
+    },
+    {
+      path: 'progress',
+      loadComponent: () => import('./features/progress/progress.page'),
+      data: { preload: true },
+    },
+  ]
+  ```
+  ```ts
+  // src/app/shared/infrastructure/selective-preloading.strategy.ts
+  import { PreloadingStrategy, Route } from '@angular/router'
+  import { Observable, of } from 'rxjs'
+
+  export function selectivePreloading(options: { include: string[] }): PreloadingStrategy {
+    return {
+      preload(route: Route, load: () => Observable<unknown>) {
+        return route.data?.['preload'] && options.include.includes(route.path!)
+          ? load()
+          : of(null)
+      },
+    }
+  }
+  ```
+  课堂结合 Angular DevTools Profiler、Chrome Performance 面板与 Lighthouse，量化优化前后的差异，并演示 `@angular/platform-browser` 的 `TransferState` 降低 SSR 重复请求。
+- **课堂演示**：集成 `@angular/google-analytics` 或自建 `fetch('/telemetry')` 上报，展示如何通过自定义指令记录交互耗时。
+- **课后挑战**：设置性能预算（`angular.json > budgets`），并在 CI 中结合 `lhci` 检查关键指标。
+
+#### 课时 16 · 无障碍与国际化
+- **知识重点**：
+  - 遵循官方 [可访问性指南](https://angular.dev/guide/accessibility) 与 WAI-ARIA 规范，确保组件支持键盘导航、语义结构、对比度。
+  - 学习 [Angular 国际化](https://angular.dev/guide/i18n) 流程，使用 `ng extract-i18n`、`localize` 包构建多语言包。
+  - 讨论日期/数字货币的本地化策略，强调动态内容（如 Toast、Dialog）的无障碍友好写法。
+- **完整案例：国际化 + 可访问的命令面板**
+  ```ts
+  // src/app/features/command-palette/command-palette.component.ts
+  import { Component, EventEmitter, Input, Output } from '@angular/core'
+  import { NgIf, NgFor } from '@angular/common'
+
+  export interface CommandOption {
+    id: string
+    label: string
+    shortcut?: string
+  }
+
+  @Component({
+    standalone: true,
+    selector: 'app-command-palette',
+    imports: [NgIf, NgFor],
+    templateUrl: './command-palette.component.html',
+    styleUrl: './command-palette.component.css',
+    host: {
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-label': $localize`:@@commandPalette:Command palette`,
+    },
+  })
+  export class CommandPaletteComponent {
+    @Input() options: CommandOption[] = []
+    @Input() isOpen = false
+    @Output() readonly execute = new EventEmitter<CommandOption>()
+
+    protected activeIndex = 0
+
+    onKeydown(event: KeyboardEvent) {
+      if (!this.isOpen) return
+      if (event.key === 'ArrowDown') {
+        this.activeIndex = (this.activeIndex + 1) % this.options.length
+        event.preventDefault()
+      } else if (event.key === 'ArrowUp') {
+        this.activeIndex = (this.activeIndex - 1 + this.options.length) % this.options.length
+        event.preventDefault()
+      } else if (event.key === 'Enter') {
+        this.execute.emit(this.options[this.activeIndex])
+        event.preventDefault()
+      }
+    }
+  }
+  ```
+  ```html
+  <!-- command-palette.component.html -->
+  <section *ngIf="isOpen" tabindex="-1" (keydown)="onKeydown($event)">
+    <header>
+      <h2 i18n="@@commandPaletteTitle">全局命令</h2>
+      <p class="sr-only" i18n="@@commandPaletteHint">使用上下箭头选择，回车执行</p>
+    </header>
+    <ul role="listbox" [attr.aria-activedescendant]="options[activeIndex]?.id">
+      <li
+        *ngFor="let option of options; let i = index"
+        [id]="option.id"
+        role="option"
+        [attr.aria-selected]="i === activeIndex"
+      >
+        {{ option.label }}
+        <span class="shortcut" *ngIf="option.shortcut">{{ option.shortcut }}</span>
+      </li>
+    </ul>
+  </section>
+  ```
+  案例展示 `$localize` 提取翻译、键盘交互处理与屏幕阅读器提示，课堂配合 NVDA/VoiceOver 实测，并演示生成 `messages.xlf`、引入英文翻译包。
+- **课堂演示**：配置 `pnpm ng extract-i18n --format xlf`, 使用 `@ngx-translate/core` 实现运行时切换；借助 `axe DevTools` 生成 A11y 报告。
+- **课后挑战**：为应用添加「高对比度模式」开关与 `prefers-reduced-motion` 动画降级，同时完成至少两种语言的翻译校对。
+
 ### S3 项目实战（4 课时）
 
 17. **项目立项与需求拆解** — 编写 PRD、用户旅程与信息架构。
