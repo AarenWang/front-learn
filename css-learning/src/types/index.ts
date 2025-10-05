@@ -9,6 +9,25 @@ export interface StageModuleMeta {
   summary: string
 }
 
+export type LessonSectionType = 'theory' | 'activity' | 'project' | 'reflection'
+
+export interface LessonSectionItem {
+  title: string
+  detail: string
+}
+
+export interface LessonTeachingSection {
+  id: string
+  type?: LessonSectionType
+  title: string
+  description?: string
+  duration?: string
+  focus?: string
+  items: LessonSectionItem[]
+  outcome?: string
+  tools?: string[]
+}
+
 export interface LearningStage {
   id: string
   title: string
@@ -24,6 +43,7 @@ export interface LearningStage {
   practiceTasks: string[]
   acceptanceCriteria: string[]
   resources: ResourceLink[]
+  teachingSections?: LessonTeachingSection[]
   route: string
   completed: boolean
 }
