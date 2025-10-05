@@ -26,6 +26,14 @@ export interface LearningStage {
     ts: string
     js: string
   }
+  courseContent?: {
+    summary: string
+    sections: Array<{
+      title: string
+      description: string
+      bullets: string[]
+    }>
+  }
 }
 
 // 用户类型

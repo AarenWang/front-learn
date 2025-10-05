@@ -123,8 +123,8 @@ export function ModulePage() {
           </Card>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-2">
-          <Card title="知识目标">
+        <section className="grid gap-6 lg:grid-cols-12">
+          <Card title="知识目标" className="h-full lg:col-span-3">
             <ul className="space-y-2 text-slate-600 dark:text-slate-400">
               {stage.objectives.map((objective) => (
                 <li key={objective} className="flex items-start gap-2">
@@ -135,7 +135,44 @@ export function ModulePage() {
             </ul>
           </Card>
 
-          <Card title="实践任务">
+          <Card title="课程内容" className="h-full lg:col-span-6">
+            {stage.courseContent ? (
+              <div className="space-y-6">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                  {stage.courseContent.summary}
+                </p>
+                <div className="space-y-6">
+                  {stage.courseContent.sections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 p-4"
+                    >
+                      <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                        {section.title}
+                      </h4>
+                      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        {section.description}
+                      </p>
+                      <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                        {section.bullets.map((bullet, index) => (
+                          <li key={`${section.title}-${index}`} className="flex items-start gap-2">
+                            <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-primary-500"></span>
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                本课的课程内容正在编排中，敬请期待。
+              </p>
+            )}
+          </Card>
+
+          <Card title="实践任务" className="h-full lg:col-span-3">
             <div className="space-y-3">
               {stage.tasks.map((task) => (
                 <label
