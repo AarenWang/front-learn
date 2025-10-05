@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 100%);
+  color: #0f172a;
+}
+
+.not-found {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem 4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.not-found h1 {
+  font-size: 2.2rem;
+  margin: 0;
+}
+
+.not-found p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.not-found a {
+  align-self: center;
+  display: inline-flex;
+  padding: 0.75rem 1.75rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  color: #f8fafc;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 20px 30px rgba(37, 99, 235, 0.25);
+}
+
+.not-found a:hover {
+  transform: translateY(-2px);
+}

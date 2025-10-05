@@ -33,6 +33,7 @@ export interface Lesson {
 }
 
 export interface LessonSection {
+  id: string
   name: string
   description: string
   targetLevel: LessonLevel | 'all'
