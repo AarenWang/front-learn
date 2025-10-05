@@ -131,6 +131,24 @@ users.map(user => user.name.toUpperCase()) // 缺少静态约束`
             '`target` 控制输出 JavaScript 版本，ES5、ES2017、ESNext 常用于适配不同运行时。',
             '`module` 与 `moduleResolution` 决定模块格式及解析策略，可选择 NodeNext、Bundler 等模式。',
             '`strict` 家族开关（strictNullChecks、noImplicitAny 等）帮助确保类型系统的完整性。'
+          ],
+          examples: [
+            {
+              title: '基础 tsconfig 示例',
+              content: `使用 \`tsc --init\` 生成的配置可以按需精简：
+\`\`\`json
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "NodeNext",
+    "strict": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
+\`\`\`
+利用不同的 tsconfig.*.json 可以覆盖部分选项，构建多产物。`
+            }
           ]
         },
         {
@@ -333,6 +351,34 @@ setStatus('deleted'); // 运行时才会暴露问题`
             '在实现体中使用类型保护：if (options && options.full) { ... }，保证返回值符合对应重载签名。',
             '通过 type QueryResult<T> = T extends true ? HTMLElement[] : HTMLElement | null 的范例，引导用条件类型简化多重重载。',
             '比较重载与联合类型的适用场景，给出 function parse(input: string | string[]) 的代码，说明当返回值不会随入参变化时联合类型更易维护。'
+          ],
+          examples: [
+            {
+              title: '查询工具函数的重载实现',
+              content: `通过两个签名描述不同的返回值，并在实现体中利用类型保护：
+\`\`\`ts
+interface UserSummary {
+  id: number
+  name: string
+}
+
+interface UserDetail extends UserSummary {
+  email: string
+}
+
+function fetchUser(id: number): UserSummary
+function fetchUser(id: number, full: true): UserDetail
+function fetchUser(id: number, full?: true) {
+  const endpoint = full ? '/detail' : '/summary'
+  const result = request(endpoint, { id })
+  if (full) {
+    return result as UserDetail
+  }
+  return result as UserSummary
+}
+\`\`\`
+重载实现体仅出现一次，利用条件分支确保返回值满足对应的签名。`
+            }
           ]
         },
         {
@@ -459,6 +505,40 @@ query('.item', 'all') // 运行时才会抛错`
             '实现 function toUserDTO(entity: UserEntity): UserDTO { return { id: entity.id, name: entity.name, roles: entity.roles.map(role => role.name) } }，强调返回值类型让 IDE 自动提示缺失字段。',
             '利用交叉类型组合额外元信息：type UserResponse = UserDTO & { permissions: string[] }，提示在响应层扩展数据的策略。',
             '在测试中使用 expectTypeOf(toUserDTO(entity)).toEqualTypeOf<UserDTO>()，确保转换函数与定义同步。'
+          ],
+          examples: [
+            {
+              title: '实体到 DTO 的类型安全映射',
+              content: `领域模型与响应对象分离可以避免泄漏内部实现：
+\`\`\`ts
+interface Role {
+  id: string
+  name: string
+}
+
+interface UserEntity {
+  id: string
+  name: string
+  passwordHash: string
+  roles: Role[]
+}
+
+interface UserDTO {
+  id: string
+  name: string
+  roles: string[]
+}
+
+function toUserDTO(entity: UserEntity): UserDTO {
+  return {
+    id: entity.id,
+    name: entity.name,
+    roles: entity.roles.map((role) => role.name)
+  }
+}
+\`\`\`
+配合单元测试断言 toUserDTO 的返回值类型，可以防止字段遗漏或扩散敏感信息。`
+            }
           ]
         },
         {

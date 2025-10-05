@@ -5,6 +5,73 @@ import { Card } from '@/components/Card'
 import { Button } from '@/components/Button'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { learningStages } from '@/types/learningStages'
+import { CodeDisplay } from '@/components/CodeDisplay'
+
+type ContentSegment =
+  | { type: 'text'; content: string }
+  | { type: 'code'; content: string; language?: string }
+
+const codeBlockPattern = /```(\w+)?\n([\s\S]*?)```/g
+
+function parseContentSegments(value: string): ContentSegment[] {
+  const segments: ContentSegment[] = []
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = codeBlockPattern.exec(value)) !== null) {
+    if (match.index > lastIndex) {
+      const text = value.slice(lastIndex, match.index)
+      if (text.trim()) {
+        segments.push({ type: 'text', content: text })
+      }
+    }
+
+    segments.push({
+      type: 'code',
+      content: match[2],
+      language: match[1]?.trim() || undefined
+    })
+
+    lastIndex = match.index + match[0].length
+  }
+
+  const rest = value.slice(lastIndex)
+  if (rest.trim()) {
+    segments.push({ type: 'text', content: rest })
+  }
+
+  return segments
+}
+
+function renderContentSegments(
+  value: string,
+  keyPrefix: string,
+  textClassName: string,
+  codeClassName?: string
+) {
+  return parseContentSegments(value).flatMap((segment, index) => {
+    if (segment.type === 'code') {
+      return (
+        <CodeDisplay
+          key={`${keyPrefix}-code-${index}`}
+          code={segment.content}
+          language={segment.language}
+          className={codeClassName}
+        />
+      )
+    }
+
+    return segment.content
+      .split(/\n{2,}/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
+      .map((paragraph, paragraphIndex) => (
+        <p key={`${keyPrefix}-text-${index}-${paragraphIndex}`} className={textClassName}>
+          {paragraph}
+        </p>
+      ))
+  })
+}
 
 function CodeCompare({
   title,
@@ -138,9 +205,13 @@ export function ModulePage() {
           <Card title="课程内容" className="h-full lg:col-span-8">
             {stage.courseContent ? (
               <div className="space-y-6">
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {stage.courseContent.summary}
-                </p>
+                <div className="space-y-3">
+                  {renderContentSegments(
+                    stage.courseContent.summary,
+                    `${stage.id}-summary`,
+                    'text-slate-700 dark:text-slate-300 leading-relaxed'
+                  )}
+                </div>
                 <div className="space-y-6">
                   {stage.courseContent.sections.map((section) => (
                     <div
@@ -150,17 +221,51 @@ export function ModulePage() {
                       <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                         {section.title}
                       </h4>
-                      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        {section.description}
-                      </p>
+                      <div className="mt-2 space-y-3">
+                        {renderContentSegments(
+                          section.description,
+                          `${section.title}-description`,
+                          'text-sm text-slate-600 dark:text-slate-400 leading-relaxed'
+                        )}
+                      </div>
                       <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
                         {section.bullets.map((bullet, index) => (
                           <li key={`${section.title}-${index}`} className="flex items-start gap-2">
                             <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-primary-500"></span>
-                            <span>{bullet}</span>
+                            <div className="flex-1 space-y-3">
+                              {renderContentSegments(
+                                bullet,
+                                `${section.title}-bullet-${index}`,
+                                'text-sm text-slate-600 dark:text-slate-400 leading-relaxed',
+                                'bg-slate-900/90'
+                              )}
+                            </div>
                           </li>
                         ))}
                       </ul>
+                      {section.examples?.length ? (
+                        <div className="mt-4 space-y-4">
+                          {section.examples.map((example, exampleIndex) => (
+                            <div
+                              key={`${section.title}-example-${exampleIndex}`}
+                              className="rounded-lg border border-slate-200 bg-white/80 p-4 dark:border-slate-800 dark:bg-slate-900/50"
+                            >
+                              {example.title ? (
+                                <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                                  {example.title}
+                                </p>
+                              ) : null}
+                              <div className="mt-2 space-y-3">
+                                {renderContentSegments(
+                                  example.content,
+                                  `${section.title}-example-${exampleIndex}-content`,
+                                  'text-sm text-slate-600 dark:text-slate-400 leading-relaxed'
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
                   ))}
                 </div>

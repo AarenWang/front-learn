@@ -32,6 +32,10 @@ export interface LearningStage {
       title: string
       description: string
       bullets: string[]
+      examples?: Array<{
+        title?: string
+        content: string
+      }>
     }>
   }
 }
