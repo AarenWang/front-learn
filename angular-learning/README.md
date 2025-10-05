@@ -642,6 +642,186 @@ pnpm test
 
 > ✅ 实战：交付一个可部署的学习管理平台，具备端到端的交付闭环。
 
+#### 课时 17 · 项目立项与需求拆解
+- **知识纲要**：
+  1. 依据官方 [Project Scoping 指南](https://angular.dev/tools/cli/usage) 与 [Angular Style Guide](https://angular.dev/styleguide) 的命名规范，规划仓库命名、分支策略与特性模块划分，明确单向依赖原则。
+  2. 结合 [User Experience Playbook](https://material.angular.io/cdk/a11y/overview) 的可访问性建议，编写「学习管理平台」的 PRD，覆盖目标用户、关键旅程（入门、进阶、复盘）与核心指标（DAU、完课率）。
+  3. 使用 Event Storming/用户故事地图梳理功能，形成 `Epic → Capability → User Story` 层级，并在 Figma 或 Excalidraw 绘制信息架构图。
+- **完整案例：PRD 片段与 Story Map**
+  ```md
+  ## 目标
+  - 提升课程完课率至 65%
+  - 将新学员的学习计划搭建时间控制在 10 分钟以内
+
+  ## 用户旅程
+  - 新手导师：登录 → 建立课程包 → 邀请学员 → 配置督学规则
+  - 学员：注册 → 浏览课程 → 加入学习路径 → 记录进度
+
+  ## 里程碑
+  - M1: 完成课程目录 + 搜索
+  - M2: 上线进度仪表盘与提醒
+  - M3: 打通团队协作与分享
+  ```
+  案例强调「目标-旅程-里程碑」三层结构，配合 Story Map 将需求拆分为 Sprint Backlog，并在课堂演示如何将需求映射到 `features/` 目录。
+- **课堂演示**：用 `pnpm dlx nx graph` 或 VS Code Workspaces 展示架构草图；在 Jira/Linear 中建立迭代看板，按优先级排序用户故事；演练创建 ADR（Architecture Decision Record）记录 Standalone 架构、状态管理选型。
+- **课后挑战**：请学员提交一份 PRD 摘要与 Story Map 图像，标注风险与假设，准备在下一课时评审。
+
+#### 课时 18 · 项目基础设施搭建
+- **知识重点**：
+  - 跟随 [Angular CLI Builder 文档](https://angular.dev/tools/cli/builders) 自定义构建流程，配置 `angular.json` 中的环境替换、性能预算与 i18n 构建目标。
+  - 参考 [ESLint for Angular](https://angular.dev/guide/eslint) 与 [Prettier 集成指南](https://prettier.io/docs/en/angular) 建立统一代码规范；使用 [Husky](https://typicode.github.io/husky) + [lint-staged](https://github.com/lint-staged/lint-staged) 实现提交前检查。
+  - 构建 GitHub Actions CI，包含 `pnpm install`, `pnpm lint`, `pnpm test`, `pnpm build` 四步，并使用 [Vercel](https://vercel.com/docs/frameworks/angular) 或 Firebase Hosting 的预览部署。
+- **完整案例：工程化配置片段**
+  ```json
+  // package.json
+  {
+    "scripts": {
+      "lint": "ng lint",
+      "test": "ng test --watch=false --code-coverage",
+      "build:staging": "ng build --configuration=staging",
+      "preview": "vercel dev"
+    },
+    "lint-staged": {
+      "src/**/*.{ts,html,scss}": ["pnpm lint --silent", "pnpm format"]
+    }
+  }
+  ```
+  ```yaml
+  # .github/workflows/ci.yml
+  name: Angular LMS CI
+
+  on:
+    pull_request:
+      branches: [main]
+
+  jobs:
+    build-test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: pnpm/action-setup@v2
+          with:
+            version: 8
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            cache: 'pnpm'
+        - run: pnpm install --frozen-lockfile
+        - run: pnpm lint
+        - run: pnpm test
+        - run: pnpm build
+  ```
+  案例展示提交钩子与 CI 并行运行的保障策略，课堂强调如何拆分环境配置、加密环境变量并接入质量门槛。
+- **课堂演示**：演练 `pnpm ng add @angular-eslint/schematics` 配置 ESLint；通过 `vercel pull` 获取预览 Token 并在 Actions Secrets 中配置；使用 SonarQube/Code Climate 演示静态分析集成。
+- **课后挑战**：完成一次从 Fork → PR → CI 通过 → Vercel 预览上线的流程，并记录遇到的工程化问题。
+
+#### 课时 19 · 核心功能迭代与集成
+- **知识重点**：
+  - 结合 [Angular Router](https://angular.dev/guide/router) 与 [Signals 指南](https://angular.dev/guide/signals) 设计迭代策略，使用 Feature Flags 控制上线节奏。
+  - 讲解端到端用例设计：课程目录、学习路径、进度仪表盘、提醒系统，强调「后端 Mock → 前端集成 → 可用性测试」的闭环。
+  - 引入 [Angular CDK](https://material.angular.io/cdk/categories) 的 Overlay、DragDrop 构建交互组件，使用 RxJS `forkJoin`/`combineLatest` 处理跨模块数据聚合。
+- **完整案例：Sprint 迭代代码片段**
+  ```ts
+  // src/app/features/planner/ui/plan-editor.component.ts
+  import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core'
+  import { PlansApi } from '../data/plans.api'
+  import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+
+  interface Plan {
+    id: string
+    title: string
+    status: 'active' | 'archived'
+    lessons: number
+  }
+
+  type PlanDraft = Pick<Plan, 'id' | 'title' | 'status'> & { lessonIds: string[] }
+
+  @Component({
+    standalone: true,
+    selector: 'app-plan-editor',
+    templateUrl: './plan-editor.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  })
+  export class PlanEditorComponent {
+    private readonly api = inject(PlansApi)
+    protected readonly plans = signal<Plan[]>([])
+    protected readonly filter = signal<'all' | 'active'>('active')
+
+    readonly filteredPlans = computed(() => {
+      return this.plans().filter((plan) =>
+        this.filter() === 'all' ? true : plan.status === 'active',
+      )
+    })
+
+    constructor() {
+      this.api
+        .list()
+        .pipe(takeUntilDestroyed())
+        .subscribe((response) => this.plans.set(response))
+    }
+
+    onSave(plan: PlanDraft) {
+      this.api.save(plan).subscribe({
+        next: (saved) => this.plans.update((plans) => plans.map((p) => (p.id === saved.id ? saved : p))),
+        error: () => alert('保存失败，请稍后重试'),
+      })
+    }
+  }
+  ```
+  ```html
+  <!-- plan-editor.component.html -->
+  <header>
+    <h2>学习路径管理</h2>
+    <app-plan-filter (change)="filter.set($event)"></app-plan-filter>
+  </header>
+  <section class="plan-list">
+    <app-plan-card
+      *ngFor="let plan of filteredPlans(); trackBy: trackById"
+      [plan]="plan"
+      (save)="onSave($event)"
+    />
+  </section>
+  ```
+  案例模拟 Sprint 中的核心模块开发，强调使用 Facade/Service 解耦 API、信号驱动 UI 更新，并在课堂上配合 Swagger Mock Server 与 Cypress 测试套件验证流程。
+- **课堂演示**：进行一次「迭代评审」模拟，展示 PR 代码走查、Playwright 回归、Storybook 视觉对比；演练 Feature Flag 的开关（如使用 ConfigCat/LaunchDarkly）。
+- **课后挑战**：提交一份迭代回顾（Retro），总结「做得好/可以改进/行动项」，并记录关键指标（部署次数、缺陷率）。
+
+#### 课时 20 · 部署、监控与持续优化
+- **知识重点**：
+  - 参考 [Angular 部署指南](https://angular.dev/tools/deployment) 与 [Vercel/Firebase 部署文档](https://angular.dev/tools/deployment#deploy-to-firebase) 完成多环境部署，并配置缓存策略、`service worker`。
+  - 引入 [Angular Universal](https://angular.dev/guide/ssr) 与 [Pre-rendering](https://angular.dev/guide/prerendering) 提升首屏体验，讨论 CSR/SSR/SSG 的权衡。
+  - 接入监控与日志：使用 [Google Analytics 4](https://angular.dev/guide/analytics) 或自建 `OpenTelemetry`，并配置 `Sentry` 捕获错误、`UptimeRobot` 监控可用性。
+- **完整案例：部署流水线与监控脚本**
+  ```bash
+  # deploy.sh
+  pnpm build --configuration=production
+  vercel deploy --prebuilt --prod
+  ```
+  ```ts
+  // src/app/infrastructure/telemetry/logger.service.ts
+  import { Injectable } from '@angular/core'
+  import { environment } from '../../environments/environment'
+
+  @Injectable({ providedIn: 'root' })
+  export class LoggerService {
+    track(event: string, payload: Record<string, unknown>) {
+      if (!environment.production) {
+        console.info('[telemetry]', event, payload)
+        return
+      }
+
+      fetch('/telemetry', {
+        method: 'POST',
+        body: JSON.stringify({ event, payload, timestamp: Date.now() }),
+        headers: { 'Content-Type': 'application/json' },
+      }).catch((error) => console.error('Telemetry failed', error))
+    }
+  }
+  ```
+  配套 `sentry.client.config.ts` 展示 `Sentry.init` 集成，课堂演示如何监控 Core Web Vitals、使用 `pnpm ng add @angular/pwa` 提供离线能力，并讨论蓝绿部署与回滚策略。
+- **课堂演示**：在 Vercel/Firebase 控制台配置环境变量、回滚到上一版本；通过 `pnpm ng run angular-learning:prerender` 生成静态文件；设置 `sentry-cli releases` 自动化标记版本。
+- **课后挑战**：完成一次生产模拟部署，记录部署命令、监控指标截图与回滚计划，形成《发布后复盘》文档。
+
 ## 🖥️ 交互式学习站点亮点
 
 - **数据驱动的课程导航**：基于 `LESSONS` 配置自动渲染课程列表，支持阶段筛选、标签过滤与关键字搜索。
