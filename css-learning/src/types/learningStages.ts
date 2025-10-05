@@ -64,6 +64,103 @@ export const learningStages: LearningStage[] = [
       { label: 'W3C CSS Standards', url: 'https://www.w3.org/TR/css/' },
       { label: 'MDN - CSS reference', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS' }
     ],
+    teachingSections: [
+      {
+        id: 'l1-intro',
+        type: 'theory',
+        title: '课程导入｜CSS 的诞生与演进时间线',
+        duration: '15 分钟',
+        description: '通过时间线故事梳理 CSS 的出现动因，建立规范演进的整体框架。',
+        focus: '理解 CSS 作为 Web 表现层标准的历史脉络',
+        items: [
+          {
+            title: '表现与结构分离的背景',
+            detail: '回顾 1994 年 Håkon Wium Lie 提出 CSS 的动机，说明 HTML4 时代为何需要独立样式层。'
+          },
+          {
+            title: 'CSS Level 演进里程碑',
+            detail: '梳理 CSS1、CSS2.1 到 CSS3 模块化的关键事件，理解从单体规范走向模块化的原因。'
+          },
+          {
+            title: '浏览器大战与标准化',
+            detail: '以 IE 与 Netscape 竞争为例，强调兼容性问题如何推动浏览器厂商加入标准化流程。'
+          }
+        ],
+        tools: ['MDN CSS Timeline', 'W3C Archive'],
+        outcome: '掌握 CSS 发展关键节点，并能口头描述 CSS Level 与模块化的差异。'
+      },
+      {
+        id: 'l1-organizations',
+        type: 'theory',
+        title: '规范组织与协作机制',
+        duration: '20 分钟',
+        description: '拆解参与 CSS 标准制定的组织角色，明确不同草案的权威性。',
+        focus: '学会辨识规范来源与跟踪路径',
+        items: [
+          {
+            title: 'W3C 架构与 CSSWG 职责',
+            detail: '说明 W3C 技术架构、工作组运作方式，以及 Editors Draft、Candidate Recommendation 的发布节奏。'
+          },
+          {
+            title: 'WHATWG 与 HTML 协作',
+            detail: '介绍 WHATWG Living Standard 与 W3C 的关系，讲解 HTML/CSS 协调接口的运作方式。'
+          },
+          {
+            title: '跨规范协同生态',
+            detail: '补充 ECMAScript、Web Platform Tests 等生态成员，帮助构建完整的前端规范地图。'
+          }
+        ],
+        tools: ['W3C TR', 'CSSWG GitHub', 'WHATWG Standards']
+      },
+      {
+        id: 'l1-spec-research',
+        type: 'activity',
+        title: '规范阅读方法与 CSSOM',
+        duration: '15 分钟',
+        description: '示范如何定位最新草案、理解文档结构，并快速提炼要点。',
+        focus: '掌握规范查阅与记录的动作路径',
+        items: [
+          {
+            title: 'TR 与 Editors Draft 的区别',
+            detail: '比较 /TR/ 与 GitHub Editors Draft 的差异，演示如何阅读 Status of This Document 部分。'
+          },
+          {
+            title: 'CSSOM 接口速览',
+            detail: '介绍 CSSOM、StyleSheetList 与 CSSStyleRule 等接口在浏览器中的映射，理解渲染引擎如何消费 CSS。'
+          },
+          {
+            title: 'Issue 追踪与会议纪要',
+            detail: '演示 CSSWG GitHub issue 与会议纪要，练习提炼讨论背景与当前进展。'
+          }
+        ],
+        tools: ['Chrome DevTools', 'CSSWG Minutes'],
+        outcome: '能够使用权威资源定位任意 CSS 模块的最新状态并做笔记。'
+      },
+      {
+        id: 'l1-project',
+        type: 'project',
+        title: '项目实战｜规范寻踪笔记搭建',
+        duration: '30 分钟',
+        description: '引导学员搭建一份可持续维护的规范索引，连接历史与最新草案。',
+        focus: '训练信息整合、结构设计与洞察输出',
+        items: [
+          {
+            title: '信息架构规划',
+            detail: '规划笔记结构：组织关系图、时间线与模块索引，确定 Markdown 或 Notion 模板。'
+          },
+          {
+            title: '资料采集与标注',
+            detail: '从 W3C TR 与 CSSWG 仓库收集链接，记录状态、发布日期与编辑者备注。'
+          },
+          {
+            title: 'Flexbox 草案拆读',
+            detail: '聚焦 Flexbox 规范导言与关键章节，提炼术语解释并补充个人理解。'
+          }
+        ],
+        tools: ['Notion 或 Obsidian', 'diagrams.net', 'MDN Spec Index'],
+        outcome: '完成一份可复用的 CSS 规范索引页，并配套 Flexbox 草案导读笔记。'
+      }
+    ],
     route: '/lessons/css-history-and-standards',
     completed: false
   },
@@ -96,6 +193,101 @@ export const learningStages: LearningStage[] = [
     resources: [
       { label: 'MDN - CSS Syntax', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Syntax' },
       { label: 'MDN - CSS Values and Units', url: 'https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units' }
+    ],
+    teachingSections: [
+      {
+        id: 'l2-syntax-basics',
+        type: 'theory',
+        title: '语法剖析与解析规则',
+        duration: '20 分钟',
+        description: '拆解 CSS Syntax Level 3 的核心术语，理解浏览器如何解析样式表。',
+        focus: '掌握规则集、声明块与 at-rule 的语法结构',
+        items: [
+          {
+            title: '规则集与声明块剖析',
+            detail: '拆解选择器、声明、属性与值的组成，强调声明结束符、注释与空白的规范写法。'
+          },
+          {
+            title: 'At-rule 分类与嵌套',
+            detail: '对比 @import、@media、@supports、@layer 的语法结构，演示条件规则与嵌套写法。'
+          },
+          {
+            title: '语法容错机制',
+            detail: '通过 Live Coding 演示浏览器如何跳过无效声明，引出严格 lint 的必要性。'
+          }
+        ],
+        tools: ['MDN CSS Syntax', 'CodePen']
+      },
+      {
+        id: 'l2-values-system',
+        type: 'theory',
+        title: '类型化值与单位体系',
+        duration: '25 分钟',
+        description: '掌握 CSS Values & Units 规范中的长度、颜色与函数值，构建可靠的设计 Token。',
+        focus: '搭建统一的数值与色彩表达方式',
+        items: [
+          {
+            title: '绝对与相对长度计算',
+            detail: '总结 px、rem、em、vw/vh 等单位的计算基准与常见换算误区，强调响应式场景的取舍。'
+          },
+          {
+            title: '颜色函数与色域比较',
+            detail: '在 DevTools 中对比 hex、rgb、hsl、lab/lch 的呈现，说明现代颜色模型的优势。'
+          },
+          {
+            title: '函数值与 calc 组合',
+            detail: '讲解 calc()/min()/max() 的解析顺序，以及与自定义属性结合时的注意事项。'
+          }
+        ],
+        tools: ['Chrome DevTools Colors', 'Color.js Playground']
+      },
+      {
+        id: 'l2-quality-guard',
+        type: 'activity',
+        title: '工程实践与质量保障',
+        duration: '15 分钟',
+        description: '将语法规范转化为团队可执行的工程守则，避免样式漂移。',
+        focus: '让样式表具备可维护、可协作特性',
+        items: [
+          {
+            title: 'Lint 规则与自动化',
+            detail: '配置 Stylelint 或 ESLint Style 插件，演示 declaration-block-trailing-semicolon 等关键规则。'
+          },
+          {
+            title: 'Design Token 命名',
+            detail: '制定 :root 变量命名、注释模板与层叠层划分，形成 reset/base/theme 的结构。'
+          },
+          {
+            title: '多人协作文件结构',
+            detail: '确定样式文件拆分策略与导入顺序，避免全局命名冲突与样式回归。'
+          }
+        ],
+        tools: ['Stylelint', 'VS Code', 'Design Token 工具']
+      },
+      {
+        id: 'l2-project',
+        type: 'project',
+        title: '项目实战｜语法规范样式表',
+        duration: '30 分钟',
+        description: '动手编写模块化基础样式表，将变量、颜色与排版系统落地。',
+        focus: '将语法规范转化为团队可复用的样式资产',
+        items: [
+          {
+            title: '搭建文件骨架',
+            detail: '创建 variables.css、base.css、typography.css，并通过 @import 或 @layer 管理加载顺序。'
+          },
+          {
+            title: '主题色与对比度校验',
+            detail: '使用 HSL/LCH 定义主副色、状态色，结合 prefers-color-scheme 设置暗色模式回退值。'
+          },
+          {
+            title: '排版模块验证',
+            detail: '在示例页面挂载 typography.css，检查标题、正文、代码块的层叠顺序与可读性。'
+          }
+        ],
+        tools: ['Stylelint CLI', 'VS Code Live Server', 'Polypane'],
+        outcome: '交付一份通过 lint 的基础样式库，作为团队设计 Token 模板。'
+      }
     ],
     route: '/lessons/css-syntax-and-values',
     completed: false
@@ -130,6 +322,101 @@ export const learningStages: LearningStage[] = [
       { label: 'MDN - Cascade and inheritance', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Cascade' },
       { label: 'web.dev - Managing CSS cascade layers', url: 'https://web.dev/articles/cascade-layers' }
     ],
+    teachingSections: [
+      {
+        id: 'l3-cascade-basics',
+        type: 'theory',
+        title: '层叠基础复盘',
+        duration: '20 分钟',
+        description: '回顾 cascade 三要素与权重模型，建立样式冲突分析的心智模型。',
+        focus: '理解来源、重要性与 specificity 的协同作用',
+        items: [
+          {
+            title: '样式来源与重要性层级',
+            detail: '解释浏览器默认样式、用户样式、作者样式的优先级，以及 !important 在不同来源中的位置。'
+          },
+          {
+            title: 'Specificity 计算模型',
+            detail: '通过手算示例讲解权重向量 (a,b,c,d)，覆盖类型、类、伪类、ID 与内联样式。'
+          },
+          {
+            title: 'DevTools 层叠演示',
+            detail: '使用 Chrome DevTools Cascade 面板展示最终命中规则与被覆盖的声明。'
+          }
+        ],
+        tools: ['Chrome DevTools Styles', 'Specificity Calculator']
+      },
+      {
+        id: 'l3-inheritance',
+        type: 'theory',
+        title: '继承机制与关键字',
+        duration: '15 分钟',
+        description: '深入掌握继承属性、初始值以及 revert 系列关键字的差异。',
+        focus: '控制继承范围，减少意外覆盖',
+        items: [
+          {
+            title: '继承属性清单',
+            detail: '梳理 color、font、line-height 等可继承属性与 non-inherited 属性的差异。'
+          },
+          {
+            title: 'initial/inherit/unset/revert',
+            detail: '对比四个关键字的语义，演示 revert-layer 在多层样式体系中的应用。'
+          },
+          {
+            title: '现代 Reset 策略',
+            detail: '讨论 normalize.css、modern-css-reset 与 @layer reset 的选择与组合方式。'
+          }
+        ],
+        tools: ['MDN Cascade', 'DevTools Computed 面板']
+      },
+      {
+        id: 'l3-governance',
+        type: 'activity',
+        title: '层叠治理策略',
+        duration: '15 分钟',
+        description: '把层叠理论转化为可执行的团队治理策略，提升调试效率。',
+        focus: '建立可复制的冲突排查流程',
+        items: [
+          {
+            title: '层叠层与命名空间',
+            detail: '结合 @layer 与 BEM 命名，规划 utilities、components、overrides 的覆盖关系。'
+          },
+          {
+            title: '调试诊断流程',
+            detail: '演示强制状态、Computed 面板与覆盖高亮，快速定位样式冲突。'
+          },
+          {
+            title: '!important 替代方案',
+            detail: '总结变量重构、作用域划分与组件 API 控制等替代 !important 的手段。'
+          }
+        ],
+        tools: ['Chrome DevTools', 'Stylelint Order 插件']
+      },
+      {
+        id: 'l3-project',
+        type: 'project',
+        title: '项目实战｜层叠冲突实验室',
+        duration: '35 分钟',
+        description: '构建一组具代表性的冲突场景，输出治理指南。',
+        focus: '通过可视化实验理解并解决层叠问题',
+        items: [
+          {
+            title: '场景搭建',
+            detail: '设计卡片、按钮、弹窗等嵌套结构，刻意安排不同 specificity 的规则组合。'
+          },
+          {
+            title: '冲突记录矩阵',
+            detail: '使用表格记录每条规则的来源、权重与最终结果，保存 DevTools 证据。'
+          },
+          {
+            title: '改进策略总结',
+            detail: '整理避免滥用 !important 的策略，并形成组件层叠规范文档。'
+          }
+        ],
+        tools: ['Notion 表格', 'Chrome DevTools Recorder'],
+        outcome: '产出层叠冲突案例库与治理清单，支撑团队知识库分享。'
+      }
+    ],
     route: '/lessons/css-cascade-and-inheritance',
     completed: false
   },
@@ -162,6 +449,101 @@ export const learningStages: LearningStage[] = [
     resources: [
       { label: 'MDN - Rendering performance', url: 'https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work' },
       { label: 'Chrome DevTools - Rendering performance', url: 'https://developer.chrome.com/docs/devtools/rendering' }
+    ],
+    teachingSections: [
+      {
+        id: 'l4-pipeline',
+        type: 'theory',
+        title: '浏览器渲染流程总览',
+        duration: '20 分钟',
+        description: '拆解浏览器从解析到绘制的每个阶段，建立性能调优的底层模型。',
+        focus: '理解 DOM、CSSOM 与 Render Tree 的协作关系',
+        items: [
+          {
+            title: 'DOM 与 CSSOM 构建',
+            detail: '说明解析器如何构建 DOM 与 CSSOM，解释样式计算的触发时机。'
+          },
+          {
+            title: '布局、绘制与合成',
+            detail: '阐释 Layout、Paint、Composite 各阶段的职责，并关联浏览器帧生成流程。'
+          },
+          {
+            title: '现代引擎多线程架构',
+            detail: '以 Blink 为例介绍主线程、合成线程与栅格化进程，理解 CSS 如何参与其中。'
+          }
+        ],
+        tools: ['Inside look at modern web browser 指南']
+      },
+      {
+        id: 'l4-cost',
+        type: 'theory',
+        title: '重排、重绘与合成成本',
+        duration: '15 分钟',
+        description: '理解不同 CSS 属性对渲染 pipeline 的影响，选择更优的样式策略。',
+        focus: '掌握属性触发的代价与优化思路',
+        items: [
+          {
+            title: '触发重排的典型属性',
+            detail: '列出 width、height、position、font-size 等属性的影响，解释为何会导致 Layout。'
+          },
+          {
+            title: '重绘与合成的差异',
+            detail: '比较背景、阴影等仅触发 Paint 的属性与 transform、opacity 等直接进入合成的属性。'
+          },
+          {
+            title: '避免 Layout Thrashing',
+            detail: '说明同步测量 API（如 offsetWidth）导致的性能问题，并提供批量读写策略。'
+          }
+        ],
+        tools: ['CSS Triggers', 'Performance Timeline']
+      },
+      {
+        id: 'l4-devtools',
+        type: 'activity',
+        title: 'DevTools 渲染调试实战',
+        duration: '20 分钟',
+        description: '掌握 Chrome DevTools 中的性能面板与层叠工具，学会收集量化证据。',
+        focus: '用数据验证样式改动的性能影响',
+        items: [
+          {
+            title: 'Performance 面板录制',
+            detail: '演示如何录制交互，分析 Summary、Bottom-Up 与 Frame Chart，识别 Layout/Update Layer Tree。'
+          },
+          {
+            title: 'Layers 与 Rendering 设置',
+            detail: '展示 Layers 面板查看合成层结构，并使用 Paint Flashing 辅助定位重绘区域。'
+          },
+          {
+            title: '指标与工具链',
+            detail: '介绍 Lighthouse、WebPageTest 等指标体系，并说明如何与 CSS 优化关联。'
+          }
+        ],
+        tools: ['Chrome DevTools', 'Lighthouse', 'WebPageTest']
+      },
+      {
+        id: 'l4-project',
+        type: 'project',
+        title: '项目实战｜渲染追踪报告',
+        duration: '35 分钟',
+        description: '引导完成一次完整的性能录制、对比与优化建议输出。',
+        focus: '以数据驱动样式性能决策',
+        items: [
+          {
+            title: '测试脚本设计',
+            detail: '选定页面交互（如展开侧边栏、切换主题），规划对比测试与录制步骤。'
+          },
+          {
+            title: '数据采集与对比',
+            detail: '分别修改 layout 属性与 transform 属性，记录两次 Performance 报告差异。'
+          },
+          {
+            title: '优化建议落地',
+            detail: '根据数据输出避免频繁重排、利用合成层、延迟渲染等可执行建议。'
+          }
+        ],
+        tools: ['Chrome DevTools', 'Lighthouse 报告', 'Notion 模板'],
+        outcome: '形成包含截图、指标与建议的渲染性能报告，为团队评审提供依据。'
+      }
     ],
     route: '/lessons/css-rendering-pipeline',
     completed: false
