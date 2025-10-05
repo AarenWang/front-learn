@@ -7,6 +7,7 @@ export function Button({
   loading = false,
   onClick, 
   className = '',
+  type = 'button',
   children,
   ...props 
 }: ButtonProps) {
@@ -28,6 +29,7 @@ export function Button({
   
   return (
     <button
+      type={type}
       className={classes}
       disabled={disabled || loading}
       onClick={onClick}

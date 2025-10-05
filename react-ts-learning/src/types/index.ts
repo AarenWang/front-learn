@@ -55,8 +55,9 @@ export interface ButtonProps {
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
   loading?: boolean
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent) => void
   className?: string
+  type?: 'button' | 'submit' | 'reset'
   children: React.ReactNode
 }
 
