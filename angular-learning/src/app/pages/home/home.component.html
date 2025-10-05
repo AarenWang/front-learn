@@ -1,0 +1,106 @@
+<div class="home">
+  <header class="home__hero">
+    <div class="home__heading">
+      <p class="home__eyebrow">Angular 全栈学习路径 · 20 课时</p>
+      <h1>构建可复用的 Angular 学习操作手册</h1>
+      <p>
+        参考官方文档与业界最佳实践，从环境搭建、核心机制到企业级项目交付，逐步掌握 Angular
+        的现代能力体系。
+      </p>
+      <div class="home__actions" *ngIf="firstLessonId as firstLessonId">
+        <a class="home__primary" [routerLink]="['/lessons', firstLessonId]">开始第一课</a>
+        <a class="home__secondary" [routerLink]="['/lessons', 's3-project-design']">直达项目实战</a>
+      </div>
+    </div>
+    <div class="home__stats">
+      <div class="home__stat">
+        <span class="home__stat-label">课程总数</span>
+        <span class="home__stat-value">{{ lessons.length }}</span>
+      </div>
+      <div class="home__stat">
+        <span class="home__stat-label">预计总时长</span>
+        <span class="home__stat-value">{{ totalEstimatedHours }} 小时</span>
+      </div>
+      <div class="home__stat">
+        <span class="home__stat-label">已完成</span>
+        <span class="home__stat-value">{{ completedCount() }} 节</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="home__progress" aria-labelledby="progress-heading">
+    <div class="progress-card">
+      <div class="progress-card__header">
+        <h2 id="progress-heading">学习进度</h2>
+        <span>{{ completedCount() }} / {{ lessons.length }} 节</span>
+      </div>
+      <div class="progress-card__bar" role="progressbar" [attr.aria-valuenow]="progressPercentage()" aria-valuemin="0"
+        [attr.aria-valuemax]="100">
+        <div class="progress-card__indicator" [style.width.%]="progressPercentage()"></div>
+      </div>
+      <p class="progress-card__meta">当前完成度：{{ progressPercentage() | number: '1.0-1' }}%</p>
+    </div>
+    <div class="progress-card progress-card--accent" *ngIf="nextLesson() as upcoming">
+      <div class="progress-card__header">
+        <h2>下一项推荐实践</h2>
+        <span>预计 {{ upcoming.estimatedHours }} 小时</span>
+      </div>
+      <p class="progress-card__title">S{{ upcoming.order }} · {{ upcoming.title }}</p>
+      <p class="progress-card__description">{{ upcoming.summary }}</p>
+      <a class="progress-card__link" [routerLink]="['/lessons', upcoming.id]">查看课程详情</a>
+    </div>
+  </section>
+
+  <section class="home__sections" aria-labelledby="section-heading">
+    <div class="home__sections-header">
+      <h2 id="section-heading">四个阶段的教学蓝图</h2>
+      <p>每个阶段提供精选课程、项目实践与指标追踪，帮助你在不同深度保持节奏。</p>
+    </div>
+    <div class="stage-grid">
+      <article class="stage-card" *ngFor="let summary of sectionSummaries(); trackBy: trackBySectionId">
+        <div class="stage-card__badge">{{ summary.section.id | uppercase }}</div>
+        <h3>{{ summary.section.name }}</h3>
+        <p class="stage-card__description">{{ summary.section.description }}</p>
+        <ul class="stage-card__lessons">
+          <li *ngFor="let lesson of summary.lessons | slice: 0:3">
+            <a [routerLink]="['/lessons', lesson.id]">S{{ lesson.order }} · {{ lesson.title }}</a>
+          </li>
+          <li *ngIf="summary.lessons.length > 3">… 等 {{ summary.lessons.length - 3 }} 节课程</li>
+        </ul>
+        <footer class="stage-card__footer">
+          <div>
+            <span>{{ summary.completedCount }} / {{ summary.totalLessons }} 已完成</span>
+            <span>约 {{ summary.estimatedHours }} 小时</span>
+          </div>
+          <a class="stage-card__link" *ngIf="summary.lessons.length > 0" [routerLink]="['/lessons', summary.lessons[0].id]">
+            进入首课
+          </a>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <section class="home__features" aria-labelledby="feature-heading">
+    <h2 id="feature-heading">学习亮点与支持</h2>
+    <div class="feature-grid">
+      <article class="feature-card" *ngFor="let feature of featureCards">
+        <div class="feature-card__icon" aria-hidden="true">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+        <ul>
+          <li *ngFor="let item of feature.highlights">{{ item }}</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="home__cta" *ngIf="nextLesson() as lesson">
+    <div class="cta-card">
+      <div>
+        <h2>保持节奏，持续交付成果</h2>
+        <p>从下一节课开始，完成代码演练与项目交付，巩固你的 Angular 能力。</p>
+      </div>
+      <a class="cta-card__button" [routerLink]="['/lessons', lesson.id]">继续学习</a>
+    </div>
+  </section>
+</div>
