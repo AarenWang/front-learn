@@ -24,6 +24,40 @@ export const learningStages: LearningStage[] = [
       ]
     },
     tooling: ['TypeScript Roadmap', 'TypeScript Compiler API', 'TC39 Stage 流程'],
+    courseContent: {
+      summary:
+        '通过官方 Handbook 与核心团队分享，梳理 TypeScript 的诞生动机、演进节奏以及围绕语言形成的生态网络。',
+      sections: [
+        {
+          title: '语言诞生与设计目标',
+          description:
+            '理解 TypeScript 如何在不破坏既有 JavaScript 资产的前提下，引入类型系统与现代工程能力。',
+          bullets: [
+            '2012 年由微软公布，Anders Hejlsberg 领衔设计，目标是为大型 JavaScript 应用提供可选的静态类型。',
+            '官方「TypeScript for JavaScript Programmers」指出语言是 ECMAScript 的严格超集，所有 JavaScript 代码都是有效的 TypeScript。',
+            '语言服务（Language Service）与编译器协作，提供即时诊断、重构与自动补全能力。'
+          ]
+        },
+        {
+          title: '与 ECMAScript 的协作机制',
+          description: '掌握 TypeScript 与 TC39 标准化流程的互动方式，理解语法提案如何落地到发行版本。',
+          bullets: [
+            '编译器将最新语法转换为目标 ECMAScript 版本，使团队可以在旧版运行时部署现代特性。',
+            '官方发布节奏包含 Stable、Beta 与 Nightly 渠道，快速验证 Stage 3+ 提案并收集反馈。',
+            '声明文件（.d.ts）覆盖 DOM、Node.js 等环境 API，为 JavaScript 平台提供一致的类型契约。'
+          ]
+        },
+        {
+          title: '生态系统关键支柱',
+          description: '梳理围绕 TypeScript 的社区与工具，理解它如何形成正向循环。',
+          bullets: [
+            'DefinitelyTyped 社区维护超 20,000 个库的类型声明，成为第三方生态的基础设施。',
+            'TypeScript-ESLint、Prettier、Babel、SWC 等工具链提供检查、格式化与降级能力。',
+            'VS Code、WebStorm 等主流 IDE 默认集成 TypeScript 语言服务，降低团队迁移成本。'
+          ]
+        }
+      ]
+    },
     resources: [
       'TypeScript 设计目标文档',
       'Anders Hejlsberg 在 Build 大会的演讲',
@@ -78,6 +112,38 @@ users.map(user => user.name.toUpperCase()) // 缺少静态约束`
       ]
     },
     tooling: ['tsc', 'ts-node', 'tsx'],
+    courseContent: {
+      summary: '围绕 tsc CLI 与 tsconfig，剖析 TypeScript 从源码到 JavaScript 的编译生命周期以及工程化配置。',
+      sections: [
+        {
+          title: '编译器工作流',
+          description: '掌握 tsc 的基础命令与工作阶段，理解类型检查与代码发射的关系。',
+          bullets: [
+            '`tsc --init` 可生成基础 tsconfig，辅助团队快速建立编译配置骨架。',
+            '`tsc --watch`、`--noEmit` 支持持续类型检查或纯诊断流程。',
+            '编译流程经历解析、绑定、类型检查、发射四个阶段，对应 Language Service 的核心能力。'
+          ]
+        },
+        {
+          title: 'tsconfig 核心维度',
+          description: '聚焦常用编译选项，掌握如何针对运行时和工程要求做出取舍。',
+          bullets: [
+            '`target` 控制输出 JavaScript 版本，ES5、ES2017、ESNext 常用于适配不同运行时。',
+            '`module` 与 `moduleResolution` 决定模块格式及解析策略，可选择 NodeNext、Bundler 等模式。',
+            '`strict` 家族开关（strictNullChecks、noImplicitAny 等）帮助确保类型系统的完整性。'
+          ]
+        },
+        {
+          title: '多目标与多包工程',
+          description: '面向真实项目，规划多入口、多产物的编译策略。',
+          bullets: [
+            '`composite`、`declaration` 组合生成可发布的 .d.ts 类型产物。',
+            'Project References 将大型代码库拆分为可增量编译的子工程，提升构建速度。',
+            '结合 `outDir`、`module` 与 `moduleResolution`，可以输出 ESM/CJS 双产物结构。'
+          ]
+        }
+      ]
+    },
     resources: ['tsconfig 官方文档', 'TypeScript Deep Dive - tsconfig 章节'],
     project: {
       title: '多目标输出脚手架',
@@ -136,6 +202,38 @@ function fetchData() {
       ]
     },
     tooling: ['TypeScript Language Service', 'tsc --noEmit'],
+    courseContent: {
+      summary: '围绕基础类型体系与推断机制，帮助学习者在严格模式下构建安全、表达力强的 TypeScript 代码。',
+      sections: [
+        {
+          title: '基础类型全景',
+          description: '熟悉常见原始类型与结构化类型，建立清晰的类型语义。',
+          bullets: [
+            '掌握 boolean、number、string、bigint、symbol、null 与 undefined 等原始类型。',
+            '理解数组、元组、枚举与 `unknown`、`any`、`never` 等特殊类型的适用场景。',
+            '利用字面量类型与联合类型，表达状态机或受限取值集合。'
+          ]
+        },
+        {
+          title: '类型推断策略',
+          description: '拆解 TypeScript 的推断机制，在项目中减少冗余注解。',
+          bullets: [
+            '局部推断：根据初始化表达式得出变量与返回值的类型。',
+            '上下文类型：事件处理、回调参数会从调用点自动推断签名。',
+            '`as const`、模板字面量类型帮助保留精确的字面量信息，提升 IDE 提示质量。'
+          ]
+        },
+        {
+          title: '严格模式守护',
+          description: '通过启用严格选项让类型系统成为防御层，减少运行时风险。',
+          bullets: [
+            '`noImplicitAny` 与 `strictNullChecks` 阻止隐式 any 和潜在空值访问。',
+            '`--exactOptionalPropertyTypes` 让可选属性的语义与运行时保持一致。',
+            '`--noUncheckedIndexedAccess` 与 `--useUnknownInCatchVariables` 支持更稳健的防御式编程。'
+          ]
+        }
+      ]
+    },
     resources: ['Handbook - Basic Types', 'TypeScript for JS Programmers'],
     project: {
       title: '智能表单校验库',
