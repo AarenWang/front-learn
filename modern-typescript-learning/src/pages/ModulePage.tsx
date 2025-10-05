@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, NavLink, useParams } from 'react-router-dom'
 
 import { Card } from '@/components/Card'
 import { Button } from '@/components/Button'
@@ -267,94 +267,94 @@ export function ModulePage() {
                         </div>
                       ) : null}
                     </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    本课的课程内容正在编排中，敬请期待。
+                  </p>
+                )}
+              </Card>
+
+              <Card title="实践任务" className="h-full lg:col-span-2">
+                <div className="space-y-3">
+                  {stage.tasks.map((task) => (
+                    <label
+                      key={task}
+                      className="flex items-start gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 shadow-sm"
+                    >
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                        checked={checkedTasks.includes(task)}
+                        onChange={() => toggleTask(task)}
+                      />
+                      <span className="text-sm text-slate-700 dark:text-slate-300">{task}</span>
+                    </label>
                   ))}
                 </div>
-              </div>
-            ) : (
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                本课的课程内容正在编排中，敬请期待。
-              </p>
-            )}
-          </Card>
+              </Card>
+            </section>
 
-          <Card title="实践任务" className="h-full lg:col-span-2">
-            <div className="space-y-3">
-              {stage.tasks.map((task) => (
-                <label
-                  key={task}
-                  className="flex items-start gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 shadow-sm"
-                >
-                  <input
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                    checked={checkedTasks.includes(task)}
-                    onChange={() => toggleTask(task)}
-                  />
-                  <span className="text-sm text-slate-700 dark:text-slate-300">{task}</span>
-                </label>
-              ))}
-            </div>
-          </Card>
-        </section>
+            <section className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+              <Card title={stage.project.title}>
+                <p className="text-slate-700 dark:text-slate-300 mb-4">{stage.project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {stage.project.milestones.map((milestone, index) => (
+                    <Button
+                      key={milestone}
+                      variant={activeMilestone === index ? 'primary' : 'secondary'}
+                      size="sm"
+                      onClick={() => setActiveMilestone(index)}
+                    >
+                      里程碑 {index + 1}
+                    </Button>
+                  ))}
+                </div>
+                <div className="bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+                  <p className="text-sm text-slate-700 dark:text-slate-300">
+                    {stage.project.milestones[activeMilestone]}
+                  </p>
+                </div>
+              </Card>
 
-        <section className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-          <Card title={stage.project.title}>
-            <p className="text-slate-700 dark:text-slate-300 mb-4">{stage.project.description}</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {stage.project.milestones.map((milestone, index) => (
-                <Button
-                  key={milestone}
-                  variant={activeMilestone === index ? 'primary' : 'secondary'}
-                  size="sm"
-                  onClick={() => setActiveMilestone(index)}
-                >
-                  里程碑 {index + 1}
-                </Button>
-              ))}
-            </div>
-            <div className="bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-              <p className="text-sm text-slate-700 dark:text-slate-300">
-                {stage.project.milestones[activeMilestone]}
-              </p>
-            </div>
-          </Card>
+              <Card title="验收标准">
+                <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                  {stage.acceptanceCriteria.map((criteria) => (
+                    <li key={criteria} className="flex items-start gap-2">
+                      <span className="mt-1 w-2 h-2 rounded-full bg-indigo-500"></span>
+                      <span>{criteria}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </section>
 
-          <Card title="验收标准">
-            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-              {stage.acceptanceCriteria.map((criteria) => (
-                <li key={criteria} className="flex items-start gap-2">
-                  <span className="mt-1 w-2 h-2 rounded-full bg-indigo-500"></span>
-                  <span>{criteria}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </section>
+            {stage.codeDemo ? (
+              <section>
+                <CodeCompare {...stage.codeDemo} />
+              </section>
+            ) : null}
 
-        {stage.codeDemo ? (
-          <section>
-            <CodeCompare {...stage.codeDemo} />
-          </section>
-        ) : null}
+            <section className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+              <Card title="延伸阅读">
+                <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                  {stage.resources.map((resource) => (
+                    <li key={resource} className="flex items-start gap-2">
+                      <span className="mt-1 w-2 h-2 rounded-full bg-amber-500"></span>
+                      <span>{resource}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
 
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-          <Card title="延伸阅读">
-            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-              {stage.resources.map((resource) => (
-                <li key={resource} className="flex items-start gap-2">
-                  <span className="mt-1 w-2 h-2 rounded-full bg-amber-500"></span>
-                  <span>{resource}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-
-          <Card title="学习小结">
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              勾选任务、完成里程碑后，建议在团队内做一次分享，复盘 TypeScript 在该课题中的价值，并记录需要深入研究的盲点。
-            </p>
-          </Card>
-        </section>
+              <Card title="学习小结">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  勾选任务、完成里程碑后，建议在团队内做一次分享，复盘 TypeScript 在该课题中的价值，并记录需要深入研究的盲点。
+                </p>
+              </Card>
+            </section>
+          </div>
+        </div>
       </main>
     </div>
   )
