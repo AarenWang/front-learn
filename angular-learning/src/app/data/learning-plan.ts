@@ -32,20 +32,22 @@ export const LESSONS: Lesson[] = [
     estimatedHours: 2,
     level: 'foundation',
     summary:
-      '了解 Angular CLI、项目结构以及常见开发工具链，完成环境搭建并运行示例应用。',
+      '了解 Angular CLI、项目结构以及常见开发工具链，完成环境搭建、首个组件生成并对照官方示例掌握基本工作流。',
     coreConcepts: [
-      'Node.js、pnpm 与 Angular CLI 安装',
-      '工作区结构、Angular.json 配置解读',
-      '开发服务器、代码生成命令与热更新',
+      'Node.js LTS、pnpm、Angular CLI 的版本选择与安装校验流程',
+      '工作区结构、angular.json 与 tsconfig.* 的核心字段解读',
+      '开发服务器、代码生成命令、测试命令与热更新机制',
+      'Angular DevTools、VS Code Angular Language Service、ESLint/Prettier 协同',
     ],
     prerequisites: ['现代 JavaScript 基础', '终端与 Git 基础操作'],
     projectPractices: [
       {
         title: '环境验证清单',
-        description: '创建第一个 Angular 应用并通过命令行工具检查常用脚本。',
+        description: '创建第一个 Angular 应用、生成 Standalone 组件并梳理脚本输出日志。',
         deliverables: [
-          '运行 `pnpm ng serve` 并记录启动过程',
-          '使用 `ng generate component` 创建示例组件',
+          '运行 `pnpm ng new angular-learning-demo --standalone` 并截图版本信息',
+          '补全 `AppComponent` 列表案例，提交运行截图与代码片段',
+          '整理常见 CLI 命令（serve/build/test/generate）及其用途',
         ],
       },
     ],
@@ -61,6 +63,9 @@ export const LESSONS: Lesson[] = [
     ],
     resources: [
       { label: 'Angular CLI 文档', url: 'https://angular.dev/tools/cli' },
+      { label: '本地开发环境搭建', url: 'https://angular.dev/tools/setup-local' },
+      { label: 'Tour of Heroes 官方教程', url: 'https://angular.dev/tutorials/first-app' },
+      { label: 'Angular DevTools 指南', url: 'https://angular.dev/tools/devtools' },
       { label: 'VS Code Angular 扩展', url: 'https://marketplace.visualstudio.com/items?itemName=Angular.ng-template' },
     ],
     tags: ['CLI', '工作流', '环境搭建'],
@@ -73,13 +78,22 @@ export const LESSONS: Lesson[] = [
     estimatedHours: 2,
     level: 'foundation',
     summary: '回顾 Angular 所依赖的 TypeScript 特性并通过小练习理解类型系统与装饰器。',
-    coreConcepts: ['接口与类型别名', '泛型在组件与服务中的应用', '装饰器与元数据'],
+    coreConcepts: [
+      '接口、类型别名、枚举在课程数据建模中的取舍与组合',
+      '泛型函数、泛型组件输入输出的编写方式与约束技巧',
+      '装饰器收集元数据、反射与 Angular 依赖注入关系',
+      '类型守卫、类型谓词、satisfies 运算符与工具类型实战',
+    ],
     prerequisites: ['前一课环境搭建完成'],
     projectPractices: [
       {
         title: '类型守卫实战',
-        description: '编写一个工具函数，为课程数据结构提供类型保护。',
-        deliverables: ['完成 `assertLesson` 类型守卫并通过单元测试'],
+        description: '编写 `assertLesson` 与 `isLessonArray` 类型守卫，为 API 响应提供双层校验。',
+        deliverables: [
+          '实现守卫并在 `LearningPlanService` 中落地使用',
+          '以 Vitest/Jest 编写正常值、异常值、边界值三类测试',
+          '使用 `HttpClient.get<Lesson>()` 泛型签名并记录类型推断结果',
+        ],
       },
     ],
     outcomes: [
@@ -94,7 +108,9 @@ export const LESSONS: Lesson[] = [
     ],
     resources: [
       { label: 'TypeScript Handbook', url: 'https://www.typescriptlang.org/docs/handbook/intro.html' },
+      { label: 'TypeScript for Angular', url: 'https://angular.dev/typescript' },
       { label: 'Angular 装饰器指南', url: 'https://angular.dev/reference/decorators' },
+      { label: '依赖注入元数据 API', url: 'https://angular.dev/reference/di/decorators/Injectable' },
     ],
     tags: ['TypeScript', '装饰器', '类型系统'],
   },
@@ -105,14 +121,24 @@ export const LESSONS: Lesson[] = [
     section: 'S0 启动阶段',
     estimatedHours: 3,
     level: 'foundation',
-    summary: '理解模块化设计、Standalone 组件与应用引导流程，熟悉依赖注入与变更检测。',
-    coreConcepts: ['Standalone 组件', '变更检测策略', '依赖注入树'],
+    summary:
+      '理解模块化设计、Standalone 组件与应用引导流程，熟悉依赖注入树与变更检测策略，能够设计合理的组件分层。',
+    coreConcepts: [
+      'Standalone 组件、bootstrapApplication 与应用启动流程解读',
+      '依赖注入树、提供者作用域、层级注入与多实例策略',
+      '默认 / OnPush 变更检测策略与信号驱动变更',
+      '容器组件、展示组件职责划分与组件树建模方法',
+    ],
     prerequisites: ['完成 TypeScript 精要'],
     projectPractices: [
       {
         title: '信息面板拆分',
-        description: '为学习计划页面设计组件树，拆分为导航、内容与统计模块。',
-        deliverables: ['输出组件树草图', '创建三个基础 Standalone 组件并演示组合'],
+        description: '绘制课程仪表盘组件树并实现容器/展示双层结构，验证变更检测策略差异。',
+        deliverables: [
+          '输出组件树草图并标注每个组件的 Inputs/Outputs/Signals',
+          '基于 CLI 生成三个 Standalone 组件并配置 `ChangeDetectionStrategy.OnPush`',
+          '使用 Angular DevTools Profiler 捕获一次渲染轨迹并总结观察',
+        ],
       },
     ],
     outcomes: [
@@ -122,6 +148,8 @@ export const LESSONS: Lesson[] = [
     resources: [
       { label: 'Angular 架构介绍', url: 'https://angular.dev/guide/architecture' },
       { label: 'Standalone API', url: 'https://angular.dev/guide/standalone-components' },
+      { label: '依赖注入概览', url: 'https://angular.dev/guide/di' },
+      { label: '变更检测机制', url: 'https://angular.dev/guide/change-detection' },
     ],
     tags: ['架构', '组件设计'],
   },
@@ -133,13 +161,21 @@ export const LESSONS: Lesson[] = [
     estimatedHours: 2,
     level: 'foundation',
     summary: '掌握插值、属性绑定、事件绑定与双向绑定，编写响应式的 UI 交互。',
-    coreConcepts: ['模板语法', '结构型指令 *ngFor/*ngIf', '双向绑定'],
+    coreConcepts: [
+      '模板插值、属性/事件绑定、双向绑定与绑定语法解析流程',
+      '结构型指令 *ngFor/*ngIf/@if/@for 的差异与 trackBy 性能优化',
+      '内置/自定义管道、模板引用变量、ngTemplateOutlet 的组合应用',
+    ],
     prerequisites: ['掌握组件化思维'],
     projectPractices: [
       {
         title: '课程列表组件',
-        description: '基于学习计划数据渲染课程列表，支持点击选中。',
-        deliverables: ['实现列表渲染与排序', '新增课程高亮效果'],
+        description: '基于学习计划数据渲染课程列表，支持搜索、阶段筛选与状态高亮。',
+        deliverables: [
+          '实现 `[(ngModel)]` 搜索输入与 `@for`/`@if` 组合渲染',
+          '封装 `trackBy` 提升渲染性能，并使用 Chrome DevTools 对比差异',
+          '创建自定义管道格式化课程时长并在模板中调用',
+        ],
       },
     ],
     outcomes: [
@@ -149,6 +185,9 @@ export const LESSONS: Lesson[] = [
     resources: [
       { label: '模板语法官方指南', url: 'https://angular.dev/guide/templates' },
       { label: 'Angular 模板参考', url: 'https://angular.dev/reference/syntax' },
+      { label: '结构指令示例', url: 'https://angular.dev/guide/structural-directives' },
+      { label: '内置管道列表', url: 'https://angular.dev/guide/pipes' },
+      { label: 'Angular 表单输入绑定', url: 'https://angular.dev/guide/forms/input-binding' },
     ],
     tags: ['模板', '数据绑定'],
   },
@@ -159,14 +198,23 @@ export const LESSONS: Lesson[] = [
     section: 'S1 核心能力',
     estimatedHours: 2,
     level: 'foundation',
-    summary: '探索 Input/Output、ViewChild 与生命周期钩子，构建协作组件。',
-    coreConcepts: ['Input/Output 装饰器', 'EventEmitter', '生命周期钩子'],
+    summary:
+      '探索 Input/Output、ViewChild 与生命周期钩子，构建可维护的协作组件并掌握资源释放策略。',
+    coreConcepts: [
+      'Input/Output 装饰器、事件发射器与父子通信设计',
+      'ViewChild/ContentChild、内容投影与模板引用协同',
+      '生命周期钩子、DestroyRef/takeUntilDestroyed 的资源释放策略',
+    ],
     prerequisites: ['模板语法与数据绑定'],
     projectPractices: [
       {
         title: '学习计划侧边栏',
-        description: '实现课程列表与详情面板之间的通信，支持点击切换课程。',
-        deliverables: ['利用 @Input 传递选中课程', '通过 @Output 通知父组件更新'],
+        description: '实现课程列表与详情面板之间的通信，并记录生命周期钩子触发顺序。',
+        deliverables: [
+          '利用 `@Input` 传递选中课程并在 `ngOnChanges` 中重置内部状态',
+          '通过 `@Output` 通知父组件更新选择，附带 payload 类型声明',
+          '在子组件中使用 `DestroyRef` 或 `takeUntilDestroyed` 清理定时器/订阅',
+        ],
       },
     ],
     outcomes: [
@@ -175,7 +223,10 @@ export const LESSONS: Lesson[] = [
     ],
     resources: [
       { label: '组件交互指南', url: 'https://angular.dev/guide/components/inputs-outputs' },
+      { label: '内容投影教程', url: 'https://angular.dev/guide/components/content-projection' },
       { label: '生命周期钩子', url: 'https://angular.dev/guide/components/lifecycle' },
+      { label: 'DestroyRef API', url: 'https://angular.dev/api/core/DestroyRef' },
+      { label: 'Angular DevTools 生命周期调试', url: 'https://angular.dev/tools/devtools#component-timeline' },
     ],
     tags: ['组件通信', '生命周期'],
   },
