@@ -642,6 +642,255 @@ pnpm test
 
 > ✅ 实战：交付一个可部署的学习管理平台，具备端到端的交付闭环。
 
+#### 课时 17 · 项目立项与需求拆解
+- **知识重点**：
+  - 结合 [Angular 官方项目规划建议](https://angular.dev/tools/roadmap) 与 [设计思维流程](https://www.nngroup.com/articles/design-thinking/) 拆分业务目标，明确 MVP 边界与成功指标。
+  - 使用用户旅程（Journey Map）与服务蓝图梳理学习者、讲师、管理员三类角色的痛点与触点，推导必需功能。
+  - 借助领域建模（Event Storming、Context Mapping）将需求映射到 Angular 模块边界，规划 `courses`、`progress`、`evaluation` 等领域上下文。
+- **完整案例：学习管理平台 PRD 速写**
+  ```text
+  目标：为企业培训打造课程学习与反馈闭环，4 周内交付最小可行产品。
+  关键指标：课程完成率 ≥ 70%、满意度问卷响应率 ≥ 60%。
+  用户画像：
+    - 学习者：需要快速了解课程安排、跟踪进度、提交反馈。
+    - 讲师：需要发布课程、查看学习数据、管理作业。
+    - 管理员：需要配置学习计划、导出报表、处理异常。 
+  用户旅程阶段（以学习者为例）：
+    1. 接收课程任务 → 2. 预约/报名 → 3. 完成学习 → 4. 填写反馈 → 5. 查看证书。
+  功能优先级（MoSCoW）：
+    - Must：课程目录、进度追踪、反馈问卷、通知中心。
+    - Should：积分体系、排行榜。
+    - Could：学习推荐、课程分享。
+    - Won't：线下签到（未来迭代）。
+  ```
+  PRD 输出配套信息架构图（IA）与页面流（Page Flow），确保导航结构与角色需求对齐。
+- **课堂演示**：使用 FigJam/Miro 演练事件风暴，实时拆解用户旅程；在 Jira/Linear 中创建史诗（Epic）与用户故事，建立优先级看板。
+- **课后挑战**：以自己的项目为例撰写 PRD 与验收标准（DoD），并绘制 `features` → `routes` → `components` 的依赖草图。
+
+#### 课时 18 · 项目基础设施搭建
+- **知识重点**：
+  - 参考 [Angular 工作区配置文档](https://angular.dev/guide/workspace-config) 理解 CLI、环境文件与构建目标的关系，确定开发/预发布/生产环境策略。
+  - 对比 Angular CLI、Nx、Monorepo 的差异，制定组织结构（例如 `apps/lms-web` + `libs/shared/ui`）。
+  - 建立代码规范：ESLint + Prettier + Stylelint + Commitlint，配合 Husky、Lint-staged 实现提交前校验；CI 侧通过 GitHub Actions/Vercel 构建自动化流程。
+- **完整案例：工程化脚手架 Blueprint**
+  ```bash
+  # 1. 初始化项目与必要库
+  pnpm dlx @angular/cli@18 new lms --standalone --style=scss
+  pnpm add -D @angular-eslint/schematics husky lint-staged commitlint @commitlint/config-conventional
+
+  # 2. 生成领域模块骨架
+  pnpm ng g feature courses/list --standalone --module=app --route=courses
+  pnpm ng g feature progress/dashboard --standalone --route=progress
+
+  # 3. 配置 Husky 与 lint-staged
+  pnpm dlx husky-init && pnpm exec husky set .husky/pre-commit "pnpm lint"
+  ```
+  ```jsonc
+  // package.json（片段）
+  {
+    "scripts": {
+      "lint": "ng lint && stylelint 'src/**/*.scss'",
+      "test": "ng test --watch=false",
+      "ci": "pnpm lint && pnpm test && pnpm build"
+    },
+    "lint-staged": {
+      "*.{ts,js}": "pnpm ng lint --fix",
+      "src/**/*.scss": "stylelint --fix",
+      "*.{md,json}": "prettier --write"
+    }
+  }
+  ```
+  ```yaml
+  # .github/workflows/ci.yml
+  name: CI
+  on:
+    pull_request:
+    push:
+      branches: [main]
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: pnpm/action-setup@v2
+          with:
+            version: 9
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            cache: pnpm
+        - run: pnpm install --frozen-lockfile
+        - run: pnpm ci
+  ```
+- **课堂演示**：展示 Nx Graph/VS Code Workspace Diagram 观察依赖，配置 `environments/environment.staging.ts`，并通过 GitHub Actions + Vercel 预览环境实现「PR → 自动部署」。
+- **课后挑战**：扩展 CI 流水线加入 Cypress 端到端测试、Bundle 分析（`ng build --stats-json` + `webpack-bundle-analyzer`），撰写团队协作文档。
+
+#### 课时 19 · 核心功能迭代与集成
+- **知识重点**：
+  - 采用 Scrum/Kanban 管理迭代，拆分史诗 → 用户故事 → 任务，配合 Definition of Ready/Done 管控范围。
+  - 利用 [Angular Router](https://angular.dev/guide/router) 的 Standalone API、[Signals](https://angular.dev/guide/signals) 与 RxJS 建立可观察状态；通过 `provideState` 与 Facade 模式隔离数据访问层。
+  - 结合契约测试（Contract Test）或 Mock Service Worker，确保前后端协作与接口稳定性。
+- **完整案例：课程目录 + 进度看板迭代**
+  ```ts
+  // src/app/features/courses/data/course.api.ts
+  import { inject, Injectable } from '@angular/core'
+  import { HttpClient } from '@angular/common/http'
+  import { shareReplay } from 'rxjs'
+
+  export interface CourseSummary {
+    id: string
+    title: string
+    level: 'starter' | 'advanced'
+    duration: number
+    tags: string[]
+  }
+
+  @Injectable({ providedIn: 'root' })
+  export class CourseApi {
+    private readonly http = inject(HttpClient)
+    private readonly baseUrl = '/api/courses'
+
+    list$ = this.http
+      .get<CourseSummary[]>(this.baseUrl)
+      .pipe(shareReplay({ refCount: true, bufferSize: 1 }))
+
+    find(id: string) {
+      return this.http.get<CourseSummary>(`${this.baseUrl}/${id}`)
+    }
+  }
+  ```
+  ```ts
+  // src/app/features/courses/data/course.facade.ts
+  import { Injectable, computed, inject, signal } from '@angular/core'
+  import { CourseApi } from './course.api'
+  import { toSignal } from '@angular/core/rxjs-interop'
+
+  @Injectable({ providedIn: 'root' })
+  export class CourseFacade {
+    private readonly api = inject(CourseApi)
+    private readonly filter = signal<'all' | 'starter' | 'advanced'>('all')
+
+    private readonly list = toSignal(this.api.list$, { initialValue: [] })
+
+    readonly courses = computed(() => {
+      const value = this.list()
+      const scope = this.filter()
+      return scope === 'all' ? value : value.filter(item => item.level === scope)
+    })
+
+    setFilter(level: 'all' | 'starter' | 'advanced') {
+      this.filter.set(level)
+    }
+  }
+  ```
+  ```ts
+  // src/app/features/progress/feature/progress.routes.ts
+  import { Routes } from '@angular/router'
+  import { inject } from '@angular/core'
+  import { provideHttpClient, withFetch } from '@angular/common/http'
+  import { ProgressDashboardComponent } from './progress-dashboard.component'
+  import { ProgressSnapshotService } from '../data/progress-snapshot.service'
+
+  export const PROGRESS_ROUTES: Routes = [
+    {
+      path: '',
+      providers: [provideHttpClient(withFetch()), ProgressSnapshotService],
+      loadComponent: () => ProgressDashboardComponent,
+      resolve: {
+        snapshot: () => inject(ProgressSnapshotService).loadSnapshot(),
+      },
+    },
+  ]
+  ```
+  ```ts
+  // src/app/features/progress/data/progress-snapshot.service.ts
+  import { inject, Injectable } from '@angular/core'
+  import { HttpClient } from '@angular/common/http'
+  import { firstValueFrom } from 'rxjs'
+
+  export interface ProgressSnapshot {
+    completed: number
+    total: number
+    satisfaction: number
+  }
+
+  @Injectable()
+  export class ProgressSnapshotService {
+    private readonly http = inject(HttpClient)
+
+    loadSnapshot() {
+      return firstValueFrom(
+        this.http.get<ProgressSnapshot>('/api/progress/snapshot'),
+      )
+    }
+  }
+  ```
+  在迭代评审会上演示课程列表、进度仪表板、反馈表单的串联，覆盖单元测试（Jest/Vitest）、组件测试（Testing Library）与 Cypress 场景测试。
+- **课堂演示**：现场拆解一个用户故事（“学习者可以过滤课程并查看完成率”），演示从 `Feature` 目录布局到 Facade/Signals/Tailwind 样式的集成流程。
+- **课后挑战**：为课程列表补充离线缓存（IndexedDB + `@ngx-pwa/local-storage`），实现 `Optimistic Update` 并编写契约测试校验 API 兼容性。
+
+#### 课时 20 · 部署、监控与持续优化
+- **知识重点**：
+  - 阅读 [Angular 部署指南](https://angular.dev/guide/deployment) 了解静态托管（Vercel、Firebase Hosting）、Server-Side Rendering（Angular Universal）、边缘渲染的差异与选择标准。
+  - 接入性能监控（Web Vitals、Core Web Vitals 采集）与错误追踪（Sentry、OpenTelemetry），建立 SLA/SLI 监控看板。
+  - 制定蓝绿/灰度发布策略、回滚流程与事后复盘（Postmortem）模板。
+- **完整案例：从构建到观测的上线流水线**
+  ```bash
+  # 1. 构建生产包
+  pnpm ng build --configuration=production --base-href=/lms/
+
+  # 2. SSR/预渲染（可选）
+  pnpm ng add @angular/ssr
+  pnpm ng run lms:prerender
+  ```
+  ```ts
+  // src/app/core/monitoring/sentry.provider.ts
+  import { APP_INITIALIZER, Provider } from '@angular/core'
+  import * as Sentry from '@sentry/angular-ivy'
+
+  export function provideSentry(dsn: string): Provider {
+    return {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory: () => () =>
+        Sentry.init({
+          dsn,
+          integrations: [new Sentry.BrowserTracing()],
+          tracesSampleRate: 0.2,
+        }),
+    }
+  }
+  ```
+  ```ts
+  // src/app/app.config.ts（片段）
+  import { provideSentry } from './core/monitoring/sentry.provider'
+
+  export const appConfig: ApplicationConfig = {
+    providers: [
+      provideSentry(import.meta.env.NG_APP_SENTRY_DSN ?? ''),
+      // ...其他 provider
+    ],
+  }
+  ```
+  ```yaml
+  # vercel.json（片段）
+  {
+    "rewrites": [{ "source": "/api/(.*)", "destination": "https://api.example.com/$1" }],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
+          { "key": "Content-Security-Policy", "value": "default-src 'self'; img-src https://cdn.example.com" }
+        ]
+      }
+    ]
+  }
+  ```
+  演示上线后的 SLO 监控看板，包含 Lighthouse CI、Sentry Issue、Logtail/ELK 日志聚合，以及 Feature Flag（Unleash/LaunchDarkly）控制回滚。
+- **课堂演示**：演练「预发布 → 生产」发布流程，触发故障注入（模拟 API 错误）并通过监控报警定位问题；展示如何使用 `ng deploy` 集成 Firebase Hosting。
+- **课后挑战**：搭建自动回滚脚本（利用 GitHub Actions + Vercel API），并撰写一次模拟上线的 Postmortem，记录时间线、根因与行动项。
+
 ## 🖥️ 交互式学习站点亮点
 
 - **数据驱动的课程导航**：基于 `LESSONS` 配置自动渲染课程列表，支持阶段筛选、标签过滤与关键字搜索。
