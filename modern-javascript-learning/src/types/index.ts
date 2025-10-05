@@ -9,6 +9,7 @@ export interface LearningStage {
   description: string
   duration: string
   foundationTopics: string[]
+  courseContent: string[]
   project: {
     name: string
     description: string

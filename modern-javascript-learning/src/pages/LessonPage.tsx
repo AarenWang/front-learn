@@ -50,6 +50,18 @@ export function LessonPage() {
           </ul>
         </section>
 
+        <section className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">课程内容</h2>
+          <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+            {stage.courseContent.map((content, index) => (
+              <li key={index} className="flex items-start">
+                <span className="mt-1 w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                <span>{content}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">项目实战 · {stage.project.name}</h2>

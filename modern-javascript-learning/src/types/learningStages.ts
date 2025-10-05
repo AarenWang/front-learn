@@ -7,6 +7,16 @@ export const learningStages: LearningStage[] = [
     description: '了解现代 JavaScript 生态、运行时和常用工具链，完成开发环境搭建。',
     duration: '2 小时',
     foundationTopics: ['ECMAScript 演进', 'Node.js 与浏览器运行时差异', 'pnpm 与 npm 对比', 'ESLint/Prettier 基本配置'],
+    courseContent: [
+      'JavaScript 历史回顾：从 ES5 到 ES2023 的重要里程碑',
+      '现代 JavaScript 特性概览：箭头函数、模板字符串、解构赋值、async/await',
+      'Node.js 运行时环境：V8 引擎、事件循环、模块系统',
+      '包管理器对比：npm、yarn、pnpm 的优缺点分析',
+      '开发工具链搭建：VSCode 配置、ESLint 规则设置、Prettier 格式化',
+      '项目初始化最佳实践：package.json 配置、scripts 脚本、依赖管理',
+      'Git 工作流基础：仓库初始化、提交规范、分支策略',
+      '环境变量管理与配置文件：.env、.editorconfig、.gitignore'
+    ],
     project: {
       name: '开发环境体检脚本',
       description: '构建一个 CLI 脚本检测并报告本地开发环境的关键依赖版本。',
@@ -27,6 +37,18 @@ export const learningStages: LearningStage[] = [
     description: '掌握 let/const、模板字符串、解构、数据类型与类型转换。',
     duration: '3 小时',
     foundationTopics: ['变量声明模式', '基本与引用类型', '可选链和空值合并', '解构与展开运算符'],
+    courseContent: [
+      '变量声明进阶：var/let/const 的作用域差异与提升行为',
+      '模板字符串深入：标签模板、嵌套模板、性能优化技巧',
+      '解构赋值全攻略：数组解构、对象解构、嵌套解构、默认值设置',
+      '展开运算符应用：数组展开、对象展开、函数参数展开',
+      'JavaScript 数据类型详解：原始类型与引用类型的区别',
+      '类型转换机制：显式转换 vs 隐式转换、转换规则与最佳实践',
+      '可选链操作符：安全访问深层属性、与空值合并的配合使用',
+      'Symbol 类型入门：唯一标识符、内置 Symbol、私有属性模拟',
+      'BigInt 大数处理：精度问题解决方案、运算注意事项',
+      '类型检测方法：typeof、instanceof、Object.prototype.toString'
+    ],
     project: {
       name: '旅行账单计算器',
       description: '编写一个可配置的消费统计脚本，支持不同类型的账单与折扣。',
@@ -47,6 +69,7 @@ export const learningStages: LearningStage[] = [
     description: '深入理解函数声明、箭头函数、作用域链、闭包与高阶函数。',
     duration: '3 小时',
     foundationTopics: ['函数提升与表达式', 'this 绑定与 call/apply/bind', '闭包与内存管理', '函数式工具链(map/filter/reduce)'],
+    courseContent: ['函数声明与表达式：提升机制、作用域差异、最佳实践'],
     project: {
       name: '可配置的函数式工具库',
       description: '构建一个轻量级函数式工具库，提供组合、柯里化等能力。',
@@ -67,6 +90,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握对象字面量、原型链、class 语法以及面向对象模式。',
     duration: '2.5 小时',
     foundationTopics: ['原型链查找规则', 'class 与继承语法', 'Object.* 实用方法', 'Symbol 与元编程'],
+    courseContent: ['原型链机制：__proto__ 与 prototype 的关系', 'class 语法糖：构造函数、静态方法、私有字段'],
     project: {
       name: '插件化日志系统',
       description: '实现一个可扩展的日志系统，支持不同输出适配器。',
@@ -87,6 +111,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握数组方法、可迭代协议、Set/Map 以及不可变数据模式。',
     duration: '2 小时',
     foundationTopics: ['数组高阶操作', 'Set/Map 与 WeakMap', '迭代器与生成器', '不可变更新模式'],
+    courseContent: ['数组方法进阶：forEach、map、filter、reduce 的深度应用', 'Set/Map 数据结构：性能特点与使用场景'],
     project: {
       name: '数据可视化准备器',
       description: '为可视化需求准备数据清洗与转换管道。',
@@ -107,6 +132,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握 ES Modules、CommonJS、模块打包与依赖管理。',
     duration: '2 小时',
     foundationTopics: ['ESM 导入导出模式', 'CommonJS 与 ESM 互操作', 'Tree Shaking 原理', 'package.json 字段解析'],
+    courseContent: ['ES Modules 基础：import/export 语法、默认导出与命名导出', '模块打包原理：Tree Shaking 优化机制'],
     project: {
       name: '模块化工具集合',
       description: '将前面实现的工具拆分为独立模块并发布为私有包。',
@@ -127,6 +153,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握 DOM 查询、事件模型、Shadow DOM 以及组件化设计理念。',
     duration: '3 小时',
     foundationTopics: ['DOM 树与节点操作', '事件捕获与冒泡', '自定义元素与 Shadow DOM', '组件状态与模板拆分'],
+    courseContent: ['DOM 操作进阶：节点遍历、属性操作、样式管理', '事件系统：捕获与冒泡机制、事件委托模式'],
     project: {
       name: '无框架组件库雏形',
       description: '实现一组原生 Web Components，涵盖按钮、标签页与通知条。',
@@ -147,6 +174,7 @@ export const learningStages: LearningStage[] = [
     description: '从回调到 Promise，掌握事件循环与异步执行模型。',
     duration: '2.5 小时',
     foundationTopics: ['事件循环与任务队列', 'Promise 状态流转', '微任务与宏任务', 'Promise 组合方法'],
+    courseContent: ['异步编程基础：回调地狱、Promise 解决机制', '事件循环详解：调用栈、任务队列、微任务队列'],
     project: {
       name: 'API 稳定器',
       description: '为不稳定的第三方 API 编写重试与超时控制模块。',
@@ -167,6 +195,7 @@ export const learningStages: LearningStage[] = [
     description: '使用 async/await、生成器与可取消任务构建稳定的数据请求层。',
     duration: '2 小时',
     foundationTopics: ['async/await 语法', 'AbortController 取消请求', '并发限制与队列', 'Streaming API'],
+    courseContent: ['async/await 语法糖：错误处理、并发控制', '请求取消机制：AbortController 的使用场景'],
     project: {
       name: '数据同步服务',
       description: '构建一个数据同步模块，支持增量同步、取消与进度回调。',
@@ -187,6 +216,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握错误分类、调试技巧、Source Map 与结构化日志。',
     duration: '2 小时',
     foundationTopics: ['Error 类型体系', 'try/catch 与错误传播', '调试工具与断点', 'Source Map 使用'],
+    courseContent: ['错误类型分类：Error、TypeError、ReferenceError 等', '调试技巧：断点调试、console 方法、性能分析'],
     project: {
       name: '浏览器调试助手',
       description: '构建一个可视化调试工具栏，集成日志、性能与网络监控。',
@@ -207,6 +237,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握 Cookie、LocalStorage、IndexedDB 以及持久化策略。',
     duration: '2.5 小时',
     foundationTopics: ['浏览器存储对比', 'IndexedDB 事务模型', '序列化策略', '安全与隐私注意事项'],
+    courseContent: ['存储方案对比：Cookie、LocalStorage、SessionStorage、IndexedDB', '数据序列化：JSON、二进制数据、压缩策略'],
     project: {
       name: '离线阅读器',
       description: '实现一个可离线访问的阅读器，支持缓存文章与阅读进度。',
@@ -227,6 +258,7 @@ export const learningStages: LearningStage[] = [
     description: '认识现代构建流程，掌握 Vite、ESBuild 与常见插件体系。',
     duration: '3 小时',
     foundationTopics: ['Vite 架构与热更新', 'ESBuild 与 Rollup 角色', '环境变量管理', '打包优化策略'],
+    courseContent: ['Vite 核心原理：ESBuild、HMR 热更新机制', '构建优化：代码分割、懒加载、Tree Shaking'],
     project: {
       name: 'Vite 企业脚手架',
       description: '搭建企业级 Vite 模板，内置别名、代理、分析与部署脚本。',
@@ -247,6 +279,7 @@ export const learningStages: LearningStage[] = [
     description: '建立统一的代码风格、静态检查与增量类型覆盖策略。',
     duration: '2 小时',
     foundationTopics: ['ESLint 进阶规则', 'Prettier 集成策略', 'TypeScript 渐进式接入', 'Husky + lint-staged'],
+    courseContent: ['代码质量工具链：ESLint 规则配置、Prettier 格式化', 'Git Hooks 集成：提交前检查、代码风格统一'],
     project: {
       name: '质量基线工程',
       description: '为团队项目搭建质量保障流水线，实现提交前自动检查。',
@@ -267,6 +300,7 @@ export const learningStages: LearningStage[] = [
     description: '掌握 Vitest、Testing Library、端到端测试与覆盖率分析。',
     duration: '2.5 小时',
     foundationTopics: ['Vitest 配置与断言', 'Testing Library 原则', 'Mock 与假数据策略', '覆盖率指标解读'],
+    courseContent: ['测试框架选择：Vitest vs Jest、配置与插件', '测试策略：单元测试、集成测试、E2E 测试'],
     project: {
       name: '测试蓝图',
       description: '为前期项目补齐单元、集成与端到端测试蓝图。',
@@ -287,6 +321,7 @@ export const learningStages: LearningStage[] = [
     description: '聚焦性能指标、懒加载、网络优化与前端监控方案。',
     duration: '2 小时',
     foundationTopics: ['关键性能指标 (TTI/LCP/FID)', '代码分割与懒加载', '图片与网络优化策略', '性能监控与报警'],
+    courseContent: ['性能指标详解：Core Web Vitals、用户体验指标', '优化策略：资源压缩、缓存策略、网络优化'],
     project: {
       name: '性能体检实验室',
       description: '为示例应用构建性能分析与优化看板。',
@@ -307,6 +342,7 @@ export const learningStages: LearningStage[] = [
     description: '整合所学，交付一套具备 CI/CD、文档与监控的现代 JavaScript 应用。',
     duration: '4 小时',
     foundationTopics: ['项目规划与模块拆分', '持续集成与部署策略', '可观测性基线', '最佳实践复盘'],
+    courseContent: ['项目架构设计：模块拆分、依赖管理、状态管理', 'CI/CD 流水线：自动化测试、部署、监控']}
     project: {
       name: '现代知识管理应用',
       description: '构建一个包含笔记、任务与仪表盘的单页应用，整合前 15 课成果。',
