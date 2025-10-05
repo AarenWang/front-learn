@@ -124,7 +124,7 @@ export function ModulePage() {
         </section>
 
         <section className="grid gap-6 lg:grid-cols-12">
-          <Card title="知识目标" className="h-full lg:col-span-3">
+          <Card title="知识目标" className="h-full lg:col-span-2">
             <ul className="space-y-2 text-slate-600 dark:text-slate-400">
               {stage.objectives.map((objective) => (
                 <li key={objective} className="flex items-start gap-2">
@@ -135,7 +135,7 @@ export function ModulePage() {
             </ul>
           </Card>
 
-          <Card title="课程内容" className="h-full lg:col-span-6">
+          <Card title="课程内容" className="h-full lg:col-span-8">
             {stage.courseContent ? (
               <div className="space-y-6">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -172,7 +172,7 @@ export function ModulePage() {
             )}
           </Card>
 
-          <Card title="实践任务" className="h-full lg:col-span-3">
+          <Card title="实践任务" className="h-full lg:col-span-2">
             <div className="space-y-3">
               {stage.tasks.map((task) => (
                 <label

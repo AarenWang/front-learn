@@ -298,6 +298,67 @@ setStatus('deleted'); // 运行时才会暴露问题`
       ]
     },
     tooling: ['tsc --watch', 'eslint typescript-eslint plugin'],
+    courseContent: {
+      summary:
+        '本课围绕函数类型的建模策略展开，从基础的函数签名、上下文 this 到重载与异步回调，帮助你把 JavaScript 的一等公民提升为可维护、易推断的 TypeScript 资产。我们会通过 IDE 体验、ESLint 约束与真实场景案例展示如何让函数类型承担契约角色，并在工具库、DOM 事件以及业务服务层中保持一致的语义。',
+      sections: [
+        {
+          title: '函数签名与参数约束的全面复习',
+          description:
+            'TypeScript 为函数提供精确的参数与返回值描述能力，除了一般的 (x: number) => number 形式，还可以通过类型别名、接口或内联对象来表达具名函数。我们强调以领域语义命名函数类型别名，并展示如何通过 readonly 与可选参数保持契约的清晰度。',
+          bullets: [
+            '结合 type CompareFn = (a: number, b: number) => number 的示例说明：函数类型别名既能作为变量的类型约束，也可以被其它接口复用。',
+            '讲解可选参数与默认值的关系，示例 function format(input: string, locale = "zh-CN" )，说明默认值不会降低类型信息的精度。',
+            '分析剩余参数 (...args: string[]) => void 与元组类型的交互，展示 function log(...entries: [string, number]) 如何带来更严格的校验。',
+            '阐述返回值类型推断的原则，并通过 const tasks = ["build", "test"] as const 与 tasks.map(task => task.toUpperCase()) 的代码段说明推断对结果集合的影响。'
+          ]
+        },
+        {
+          title: '上下文 this、绑定与箭头函数',
+          description:
+            'JavaScript 的 this 随调用方式变化，TypeScript 提供了 this 参数显式声明语法来弥补歧义。我们会通过 DOM 事件处理与类方法封装演示如何避免 this 漂移，并对比箭头函数与 bind、call 的类型行为差异。',
+          bullets: [
+            '展示 function mouseTracker(this: HTMLElement, event: MouseEvent) { /* ... */ } 的写法，强调第一个参数声明 this 只用于类型检查，不会出现在运行时代码中。',
+            '结合 element.addEventListener("click", mouseTracker.bind(button)) 说明若未声明 this，TypeScript 会推断为 any 导致隐患。',
+            '解释箭头函数 const handler = (event: MouseEvent) => { console.log(this) } 的 this 取自词法环境，在 TypeScript 中无需额外声明。',
+            '提供 ESLint 规则 @typescript-eslint/unbound-method 的配置片段，提醒团队在 class 成员中保持 this 绑定一致性。'
+          ]
+        },
+        {
+          title: '函数重载与调用签名调度',
+          description:
+            '函数重载允许为同一个实现提供多种调用方式，本节总结书写顺序、实现体联合类型处理技巧，并强调保持重载数量可控。通过查询函数、网络请求包装器与表单解析案例，展示如何用类型来表达业务分支。',
+          bullets: [
+            '讲解重载声明应从最具体到最宽泛排序，示例 function fetchUser(id: number): User 与 function fetchUser(id: number, full: true): DetailedUser。',
+            '在实现体中使用类型保护：if (options && options.full) { ... }，保证返回值符合对应重载签名。',
+            '通过 type QueryResult<T> = T extends true ? HTMLElement[] : HTMLElement | null 的范例，引导用条件类型简化多重重载。',
+            '比较重载与联合类型的适用场景，给出 function parse(input: string | string[]) 的代码，说明当返回值不会随入参变化时联合类型更易维护。'
+          ]
+        },
+        {
+          title: '回调、泛型与高阶函数实践',
+          description:
+            '大量函数会接受其他函数作为参数，TypeScript 的泛型、约束与上下文类型能确保高阶函数安全执行。本节结合数组工具、Promise 链式处理以及事件委托封装，展示在 IDE 中获得推断带来的生产力提升。',
+          bullets: [
+            '解析 function mapValues<T, R>(source: T[], iteratee: (item: T, index: number) => R): R[] 的签名，指出泛型如何让回调参数与返回值保持一致。',
+            '演示 function once<T extends (...args: any[]) => any>(fn: T): T 的实现，强调返回函数需继承原始签名以保持调用体验。',
+            '在 Promise 链条中加入泛型：async function withRetry<T>(task: () => Promise<T>): Promise<T>，示例中通过 try/catch 结合重试计数维持类型不变。',
+            '提供事件委托案例 delegate(container, "button", "click", event => event.currentTarget.dataset.id )，说明回调参数可利用 HTMLElementTagNameMap 获得特定元素类型。'
+          ]
+        },
+        {
+          title: '异步函数、错误处理与可测试性',
+          description:
+            '现代前端函数大多涉及异步流程，TypeScript 需要描述返回 Promise 的函数、错误分支以及测试桩。本节通过 async/await、never 返回与断言函数演示如何在异常场景下保持类型完整性。',
+          bullets: [
+            '强调 async function loadUser(): Promise<User> 的返回值一定是 Promise，结合 Awaited<UserPromise> 的示例帮助团队理解类型展开。',
+            '展示断言函数 function assertUser(user: User | undefined): asserts user is User 的写法，让调用者在异常之后获得收窄类型。',
+            '讲解自定义错误类型 class HttpError extends Error { constructor(public status: number, message: string) { super(message) } } 与函数签名 function isHttpError(error: unknown): error is HttpError。',
+            '提供测试桩代码：const fetchMock: jest.MockedFunction<typeof fetchUser>，说明在单测中使用类型别名保持桩函数与真实函数一致。'
+          ]
+        }
+      ]
+    },
     resources: ['Handbook - Functions', 'Effective TypeScript 第 3 章'],
     project: {
       title: '事件委托工具库',
@@ -352,6 +413,67 @@ query('.item', 'all') // 运行时才会抛错`
       ]
     },
     tooling: ['tsc --traceResolution', 'tsserver log'],
+    courseContent: {
+      summary:
+        '本课聚焦接口与类型别名在结构化建模中的协作方式。我们将以真实领域模型为主线，比较 interface 与 type 的语义差异，解释交叉类型、映射类型与结构兼容的运行机制，并辅以 DTO 转换、配置对象校验以及工具类型的综合实践。通过大量对比示例，让你理解何时选择 interface、何时采用 type，以及如何使用 satisfies 和模板字面量构建稳定的契约。',
+      sections: [
+        {
+          title: '接口与类型别名的定位差异',
+          description:
+            'Interface 提供声明合并、继承扩展等能力，而类型别名支持联合、交叉与条件类型的表达。本节通过对比语法、编译输出与社区惯例帮助学习者建立选择框架。',
+          bullets: [
+            '展示 interface User { id: string; name: string } 与 type User = { id: string; name: string } 的等价性，并说明 interface 可以被多次声明自动合并。',
+            '通过 interface Admin extends User { permissions: string[] } 与 type Admin = User & { permissions: string[] } 的示例比较扩展写法，强调交叉类型可能触发属性冲突需要手动排查。',
+            '说明 interface 不能直接表达联合类型，而 type UserState = "active" | "suspended" | "deleted" 能简洁描述有限集合。',
+            '提供约束库 API 的建议：对外暴露的公共模型优先使用 interface，以便第三方透过声明合并扩展属性。'
+          ]
+        },
+        {
+          title: '结构类型系统与兼容规则',
+          description:
+            'TypeScript 采用结构化兼容，只要对象形状相同即可赋值。本节解读赋值兼容的方向、成员可选性以及函数参数的双变原则，并提示可能的陷阱。',
+          bullets: [
+            '通过 const profile: User = { id: "1", name: "Ada", email: "ada@example.com" } 的代码说明超集赋值合法，但建议配合 satisfies 检查额外属性。',
+            '解析函数参数的双变特性，并结合 type EventHandler = (event: MouseEvent | KeyboardEvent) => void 指出 KeyboardEvent 的子类型可赋值，展示开启 strictFunctionTypes 后的变化。',
+            '讨论可选属性在结构兼容中的行为：interface DraftUser { id: string; name?: string } 可以赋值给 User 吗？演示编译器如何处理缺失的可选字段。',
+            '给出 const dto = { id: "1", name: "Ada", extra: true } satisfies User 的示例，让 IDE 在保留额外属性的同时验证必要字段。'
+          ]
+        },
+        {
+          title: '交叉类型、映射类型与工具类型协同',
+          description:
+            '交叉类型可以组合多个能力，映射类型则让我们批量修改属性修饰符；配合内置工具类型可以构建灵活的模型转换。本节将 DTO 转换、权限合并和配置校验穿插在一起，展示从接口到最终产物的每一步。',
+          bullets: [
+            '演示 type WithTimestamps<T> = T & { createdAt: Date; updatedAt: Date }，并在服务层 type PersistedUser = WithTimestamps<User> 中应用。',
+            '解释 type ReadonlyProps<T> = { readonly [K in keyof T]: T[K] } 与内置 Readonly<T> 的等价性，帮助理解映射类型的语法。',
+            '给出 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>> 的代码，说明如何通过工具类型组合控制字段的可选性。',
+            '结合配置对象：const config = { theme: "dark", features: { audit: true } } satisfies DeepPartial<AppConfig>，强调映射类型在深层结构中的价值。'
+          ]
+        },
+        {
+          title: '领域模型到 DTO 的转化流程',
+          description:
+            '现实项目需要在领域模型与接口层之间转换数据。本节以用户实体到 HTTP 响应 DTO 为例，拆解从 interface 定义、类型安全转换函数到单元测试的完整链路。',
+          bullets: [
+            '定义实体接口 interface UserEntity { id: string; name: string; passwordHash: string; roles: Role[] } 与 DTO interface UserDTO { id: string; name: string; roles: string[] }，并说明隐藏敏感字段的原因。',
+            '实现 function toUserDTO(entity: UserEntity): UserDTO { return { id: entity.id, name: entity.name, roles: entity.roles.map(role => role.name) } }，强调返回值类型让 IDE 自动提示缺失字段。',
+            '利用交叉类型组合额外元信息：type UserResponse = UserDTO & { permissions: string[] }，提示在响应层扩展数据的策略。',
+            '在测试中使用 expectTypeOf(toUserDTO(entity)).toEqualTypeOf<UserDTO>()，确保转换函数与定义同步。'
+          ]
+        },
+        {
+          title: '高级技巧：模板字面量、索引签名与约束',
+          description:
+            '当业务模型涉及动态键名或 API 版本化时，需要模板字面量与索引签名协作。我们会以权限枚举、配置键与国际化资源为例，展示如何保持类型安全并减少魔法字符串。',
+          bullets: [
+            '编写 type PermissionKey = `user:${"create" | "read" | "update" | "delete"}`，并通过 Record<PermissionKey, boolean> 管理权限开关。',
+            '解析 interface TranslationMap { [key: `${Locale}.${string}`]: string } 的写法，强调索引签名需要与命名空间约定结合使用。',
+            '使用 type ApiVersioned<T extends string> = `v1/${T}` | `v2/${T}` 的例子控制接口路径，避免拼写错误。',
+            '展示 function getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] 的实现，让调用者根据 key 获得对应的值类型。'
+          ]
+        }
+      ]
+    },
     resources: ['Handbook - Interfaces', 'TypeScript Deep Dive - Type System'],
     project: {
       title: '用户领域模型建模',
@@ -382,6 +504,67 @@ query('.item', 'all') // 运行时才会抛错`
       points: ['依赖注入容器', '日志埋点', '权限校验']
     },
     tooling: ['tsconfig experimentalDecorators', 'reflect-metadata'],
+    courseContent: {
+      summary:
+        '本课聚焦 TypeScript 在面向对象范式中的扩展能力，涵盖类成员修饰符、抽象类与接口的协同、最新 ECMAScript 装饰器提案以及与依赖注入、日志埋点相关的工程实践。我们将通过请求客户端、仓储层以及装饰器工厂三个案例构建从设计到测试的完整闭环，帮助你理解装饰器的运行时开销与类型声明方式，确保团队在启用实验特性时仍保持可读性与安全性。',
+      sections: [
+        {
+          title: '类与访问修饰符的深度解析',
+          description:
+            'TypeScript 在类上提供 public、private、protected、readonly 以及参数属性语法，本节通过示例说明这些修饰符对封装性与可测试性的影响，并对比 ECMAScript 私有字段。',
+          bullets: [
+            '示例 class Logger { private buffer: string[] = []; public write(message: string) { this.buffer.push(message) } }，说明私有成员只能在类内部访问。',
+            '解释参数属性 constructor(private http: HttpClient) 的简洁写法，并展示等价的手写属性声明形式。',
+            '对比 private 与 #secret 的差异，指出前者在编译后仍可通过索引访问，后者是真正的运行时私有字段。',
+            '讨论 readonly 对不可变性的帮助，并结合 readonly config: AppConfig 的代码，建议在构造函数中进行深拷贝以避免外部修改。'
+          ]
+        },
+        {
+          title: '继承、抽象类与接口协作模式',
+          description:
+            '面向对象设计强调抽象与复用，TypeScript 支持抽象类定义模板方法，同时借助接口描述能力。本节通过请求客户端与仓储类的例子讲解如何用抽象类约束流程，用接口描述外部能力。',
+          bullets: [
+            '构建 abstract class BaseRepository<T>，包含抽象方法 abstract findById(id: string): Promise<T | null>，强调子类必须实现核心数据访问逻辑。',
+            '实现 class UserRepository extends BaseRepository<User> 并注入数据源，结合 protected mapToEntity(record: Record<string, unknown>): User 展示模板方法模式。',
+            '借助接口 interface Cacheable { getCacheKey(): string } 与 class CachedRepository<T extends Cacheable> 的代码，说明类型约束如何保证实体具备缓存能力。',
+            '补充组合替代继承的策略：type RepositoryPlugin<T> = { beforeSave?(entity: T): void }，通过交叉类型为仓储添加可选插件。'
+          ]
+        },
+        {
+          title: '装饰器提案的语法与最佳实践',
+          description:
+            'ECMAScript 新版装饰器采用工厂函数返回初始化逻辑，TypeScript 需开启 experimentalDecorators 与 emitDecoratorMetadata 才能使用。本节拆解类装饰器、方法装饰器与访问器装饰器的类型定义，讨论与反射库协作时的注意事项。',
+          bullets: [
+            '提供类装饰器范例：function Controller(path: string) { return target => { Reflect.defineMetadata("path", path, target) } }，说明工厂函数返回的装饰器如何被调用。',
+            '展示方法装饰器 function Log()，类型签名 (value: ClassMethodDecoratorContext) => void，并在实现中记录 context.name 与 context.kind。',
+            '解释访问器装饰器 function CoerceNumber(): ClassAccessorDecoratorResult<number> { return { get(value) { return Number(value) } } } 的行为。',
+            '强调装饰器执行顺序与运行时成本，建议在性能敏感场景中使用编译期代码生成替代。'
+          ]
+        },
+        {
+          title: '请求客户端案例：从设计到实现',
+          description:
+            '结合上一节的抽象类与装饰器，我们实现一个带审计日志的 HTTP 客户端。重点展示如何设计请求生命周期、注入依赖以及利用装饰器收集信息。',
+          bullets: [
+            '定义基础抽象类 abstract class HttpClient { constructor(protected baseUrl: string) {} abstract request<T>(config: RequestConfig): Promise<T> }。',
+            '在子类 class FetchClient extends HttpClient 中实现 async request<T>(config) { const res = await fetch(this.baseUrl + config.path); return res.json() as Promise<T> }。',
+            '编写装饰器 function Audit(action: string) { return (_: unknown, context: ClassMethodDecoratorContext) => { return async function (this: any, ...args: unknown[]) { console.time(action); const result = await context.access!.apply(this, args); console.timeEnd(action); return result } } }，展示如何记录执行时间。',
+            '使用 @Audit("fetch-user") 标记仓储方法，并在单测中通过 jest.spyOn(console, "time") 验证日志调用次数。'
+          ]
+        },
+        {
+          title: '测试、元数据与团队协作',
+          description:
+            '引入装饰器后需要关注编译配置、测试工具与团队约定。本节总结如何在 tsconfig 中启用实验特性、如何利用 reflect-metadata 获取类型信息，以及如何通过 linter 与文档保持一致。',
+          bullets: [
+            '在 tsconfig 中配置 "experimentalDecorators": true, "emitDecoratorMetadata": true，并解释只在需要反射时开启后者以减少输出体积。',
+            '演示在入口文件 import "reflect-metadata" 的必要性，以及如何在 Vitest 中通过 setupFiles 确保装饰器元数据可用。',
+            '提供约束文档模板，要求团队在 README 中记录每个装饰器的运行时副作用与依赖关系。',
+            '展示 class Service { constructor(@Inject("Logger") private logger: Logger) {} } 的构造器注入写法，并提醒结合 IoC 容器时要补充声明合并确保符号常量具有类型提示。'
+          ]
+        }
+      ]
+    },
     resources: ['Handbook - Classes', 'TC39 Decorators 提案'],
     project: {
       title: '可审计的请求客户端',
