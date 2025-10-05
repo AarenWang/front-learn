@@ -26,7 +26,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.12.3
+          version: 10.5.2
+
+      - name: Show pnpm version
+        run: pnpm --version
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -61,6 +64,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    defaults:
+      run:
+        working-directory: ./modern-typescript-learning
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -68,7 +74,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.12.3
+          version: 10.5.2
+
+      - name: Show pnpm version
+        run: pnpm --version
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
