@@ -1,5 +1,6 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  background-color: #f8fafc;
 }
 
 *,
@@ -16,7 +17,9 @@ body {
 body {
   margin: 0;
   font-family: 'Inter', 'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: #020617;
+  background: #f8fafc;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {

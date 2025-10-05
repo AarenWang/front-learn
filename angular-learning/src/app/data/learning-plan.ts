@@ -2,21 +2,25 @@ import { Lesson, LessonSection } from '../models/lesson.model'
 
 export const LESSON_SECTIONS: LessonSection[] = [
   {
+    id: 's0',
     name: 'S0 启动阶段',
     description: '搭建开发环境、理解 Angular 架构与 TypeScript 基础，为后续学习奠定基石。',
     targetLevel: 'foundation',
   },
   {
+    id: 's1',
     name: 'S1 核心能力',
     description: '深入掌握组件、模板、依赖注入、路由与表单等 Angular 核心特性。',
     targetLevel: 'foundation',
   },
   {
+    id: 's2',
     name: 'S2 进阶提升',
     description: '围绕性能、状态管理、可测试性与可维护性展开，打造生产级质量。',
     targetLevel: 'advanced',
   },
   {
+    id: 's3',
     name: 'S3 项目实战',
     description: '通过端到端的项目实战巩固知识，涵盖设计、集成、部署与优化。',
     targetLevel: 'project',
