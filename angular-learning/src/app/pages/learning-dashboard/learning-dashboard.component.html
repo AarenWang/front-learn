@@ -105,10 +105,11 @@
     </article>
   </section>
 
-  <section class="content-grid">
-    <aside class="lesson-list">
-      <h2>课程导航</h2>
-      <p class="lesson-list__hint">选择课程查看详细大纲与项目实践。</p>
+  <!-- 课程导航 -->
+  <section class="lesson-navigation">
+    <h2>课程导航</h2>
+    <p class="lesson-navigation__hint">选择课程查看详细大纲与项目实践。</p>
+    <div class="lesson-cards">
       <div class="lesson-card"
         *ngFor="let lesson of filteredLessons()"
         [class.lesson-card--active]="selectedLesson().id === lesson.id"
@@ -135,75 +136,85 @@
           {{ isCompleted(lesson.id) ? '已完成' : '标记完成' }}
         </button>
       </div>
-    </aside>
-
-    <article class="lesson-detail" *ngIf="selectedLesson() as lesson">
-      <header class="lesson-detail__header">
-        <div>
-          <p class="lesson-detail__section">{{ lesson.section }} · {{ levelLabel(lesson.level) }}</p>
-          <h2>{{ lesson.title }}</h2>
-        </div>
-        <button
-          type="button"
-          class="lesson-detail__complete"
-          [class.lesson-detail__complete--done]="isCompleted(lesson.id)"
-          (click)="toggleCompletion(lesson)"
-        >
-          {{ isCompleted(lesson.id) ? '已完成 ✔' : '完成本课' }}
-        </button>
-      </header>
-
-      <section class="lesson-detail__summary">
-        <h3>课程概览</h3>
-        <p>{{ lesson.summary }}</p>
-        <div class="lesson-detail__info">
-          <span>预计时长：{{ lesson.estimatedHours }} 小时</span>
-          <span>前置要求：{{ lesson.prerequisites.join('、') }}</span>
-        </div>
-      </section>
-
-      <section class="lesson-detail__content">
-        <div class="lesson-detail__column">
-          <h3>核心知识点</h3>
-          <ul>
-            <li *ngFor="let concept of lesson.coreConcepts">{{ concept }}</li>
-          </ul>
-
-          <h3>预期产出</h3>
-          <ul>
-            <li *ngFor="let outcome of lesson.outcomes">
-              <strong>{{ outcome.title }}：</strong>
-              <span>{{ outcome.details }}</span>
-            </li>
-          </ul>
-        </div>
-        <div class="lesson-detail__column">
-          <h3>项目实践</h3>
-          <div class="practice" *ngFor="let practice of lesson.projectPractices">
-            <h4>{{ practice.title }}</h4>
-            <p>{{ practice.description }}</p>
-            <ul>
-              <li *ngFor="let item of practice.deliverables">{{ item }}</li>
-            </ul>
-          </div>
-
-          <h3>拓展资源</h3>
-          <ul>
-            <li *ngFor="let resource of lesson.resources">
-              <a [href]="resource.url" target="_blank" rel="noreferrer">{{ resource.label }}</a>
-            </li>
-          </ul>
-        </div>
-      </section>
-    </article>
-
-    <aside class="upcoming" *ngIf="upcomingPractices().length > 0">
-      <h2>下一步实践建议</h2>
-      <div class="upcoming__item" *ngFor="let item of upcomingPractices()">
-        <h3>{{ item.lesson.title }}</h3>
-        <p class="upcoming__section">{{ item.lesson.section }} · {{ item.lesson.estimatedHours }}h</p>
-        <p>{{ item.nextPractice!.description }}</p>
-      </div>
-    </aside>
+    </div>
   </section>
+
+  <!-- 课程详情 -->
+  <article class="lesson-detail" *ngIf="selectedLesson() as lesson">
+    <header class="lesson-detail__header">
+      <div>
+        <p class="lesson-detail__section">{{ lesson.section }} · {{ levelLabel(lesson.level) }}</p>
+        <h2>{{ lesson.title }}</h2>
+      </div>
+      <button
+        type="button"
+        class="lesson-detail__complete"
+        [class.lesson-detail__complete--done]="isCompleted(lesson.id)"
+        (click)="toggleCompletion(lesson)"
+      >
+        {{ isCompleted(lesson.id) ? '已完成 ✔' : '完成本课' }}
+      </button>
+    </header>
+
+    <!-- 课程概览 -->
+    <section class="lesson-detail__summary">
+      <h3>课程概览</h3>
+      <p>{{ lesson.summary }}</p>
+      <div class="lesson-detail__info">
+        <span>预计时长：{{ lesson.estimatedHours }} 小时</span>
+        <span>前置要求：{{ lesson.prerequisites.join('、') }}</span>
+      </div>
+    </section>
+
+    <!-- 核心知识点 -->
+    <section class="lesson-detail__section-block">
+      <h3>核心知识点</h3>
+      <ul class="lesson-detail__list">
+        <li *ngFor="let concept of lesson.coreConcepts">{{ concept }}</li>
+      </ul>
+    </section>
+
+    <!-- 预期产出 -->
+    <section class="lesson-detail__section-block">
+      <h3>预期产出</h3>
+      <ul class="lesson-detail__list">
+        <li *ngFor="let outcome of lesson.outcomes">
+          <strong>{{ outcome.title }}：</strong>
+          <span>{{ outcome.details }}</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 项目实践 -->
+    <section class="lesson-detail__section-block">
+      <h3>项目实践</h3>
+      <div class="practice" *ngFor="let practice of lesson.projectPractices">
+        <h4>{{ practice.title }}</h4>
+        <p>{{ practice.description }}</p>
+        <ul>
+          <li *ngFor="let item of practice.deliverables">{{ item }}</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 拓展资源 -->
+    <section class="lesson-detail__section-block">
+      <h3>拓展资源</h3>
+      <ul class="lesson-detail__list">
+        <li *ngFor="let resource of lesson.resources">
+          <a [href]="resource.url" target="_blank" rel="noreferrer">{{ resource.label }}</a>
+        </li>
+      </ul>
+    </section>
+  </article>
+
+  <!-- 下一步实践建议 -->
+  <aside class="upcoming" *ngIf="upcomingPractices().length > 0">
+    <h2>下一步实践建议</h2>
+    <div class="upcoming__item" *ngFor="let item of upcomingPractices()">
+      <h3>{{ item.lesson.title }}</h3>
+      <p class="upcoming__section">{{ item.lesson.section }} · {{ item.lesson.estimatedHours }}h</p>
+      <p>{{ item.nextPractice!.description }}</p>
+    </div>
+  </aside>
 </div>
