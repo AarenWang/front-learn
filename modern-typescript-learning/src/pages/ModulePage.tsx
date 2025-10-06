@@ -4,6 +4,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { Card } from '@/components/Card'
 import { Button } from '@/components/Button'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { CourseNavigation } from '@/components/CourseNavigation'
 import { learningStages } from '@/types/learningStages'
 import { CodeDisplay } from '@/components/CodeDisplay'
 
@@ -133,6 +134,9 @@ export function ModulePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      {/* 课程导航 */}
+      <CourseNavigation currentLessonId={lessonId || ''} />
+      
       <header className="bg-white/90 backdrop-blur dark:bg-slate-900/90 shadow-sm border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">

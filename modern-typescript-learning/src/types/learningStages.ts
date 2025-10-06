@@ -793,7 +793,7 @@ class CollectionService<TEntity extends { id: string }, TList extends TEntity[] 
   constructor(private http: HttpClient, private resource: string) {}
 
   async list(): Promise<TList> {
-    return this.http.get<TList>(\`/${this.resource}\`)
+    return this.http.get<TList>(\`/\${this.resource}\`)
   }
 }
 \`\`\`
@@ -876,7 +876,7 @@ function handleResult<T extends ApiResult<unknown>>(result: T): ExtractData<T> |
             `泛型还可以借助模板字面量类型生成更具表达力的键。例如根据实体名称自动推导事件名称：
 
 \`\`\`ts
-type EventName<TEntity extends string, TAction extends string> = \`${TEntity}:${TAction}\`
+type EventName<TEntity extends string, TAction extends string> = \`\${TEntity}:\${TAction}\`
 
 const event: EventName<'user', 'updated'> = 'user:updated'
 \`\`\`
@@ -961,10 +961,10 @@ async function useService<T>(task: () => Promise<T>): Promise<UnwrapPromise<Retu
                 `模板字面量类型与条件类型结合后，可以构造出更具表现力的字符串类型。如下所示的 API 事件名称推导：
 
 \`\`\`ts
-type EventTopic<TModule extends string, TAction extends string> = \`${Lowercase<TModule>}/${TAction}\`
+type EventTopic<TModule extends string, TAction extends string> = \`\${Lowercase<TModule>}/\${TAction}\`
 
 function createTopic<TModule extends string, TAction extends string>(module: TModule, action: TAction) {
-  return \`${module.toLowerCase()}/${action}\` as EventTopic<TModule, TAction>
+  return \`\${module.toLowerCase()}/\${action}\` as EventTopic<TModule, TAction>
 }
 \`\`\`
 通过 Lowercase，我们还能在类型层对字符串进行转换，保证 topic 始终遵循约定。`
@@ -1027,8 +1027,8 @@ type ButtonDataProps = RemoveEvents<ButtonProps>
 \`\`\`ts
 type DotPath<T, TPrefix extends string = ''> = {
   [TKey in keyof T]: T[TKey] extends Record<string, unknown>
-    ? DotPath<T[TKey], \`${TPrefix}\${Extract<TKey, string>}.\`>
-    : \`${TPrefix}\${Extract<TKey, string>}\`
+    ? DotPath<T[TKey], \`\${TPrefix}\${Extract<TKey, string>}.\`>
+    : \`\${TPrefix}\${Extract<TKey, string>}\`
 }[keyof T]
 
 type Paths = DotPath<{ meta: { owner: { name: string } }; stats: { views: number } }>
