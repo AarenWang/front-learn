@@ -11,18 +11,26 @@ import { ModulePage } from '@/pages/ModulePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 function App() {
-  const rawBase = import.meta.env.BASE_URL || '/'
-  const normalizedBase =
-    rawBase === './'
-      ? '/'
-      : rawBase.replace(/\/+$/, '') || '/'
+  let routerProps: BrowserRouterProps = {}
 
-  const routerProps: BrowserRouterProps =
-    normalizedBase === '/'
-      ? {}
-      : {
-          basename: normalizedBase
-        }
+  if (typeof window !== 'undefined') {
+    const rawBase = import.meta.env.BASE_URL || '/'
+
+    try {
+      const resolvedPath = new URL(rawBase, window.location.href).pathname
+      const normalizedPath = resolvedPath.replace(/\/+$/, '') || '/'
+
+      if (normalizedPath !== '/') {
+        routerProps = { basename: normalizedPath }
+      }
+    } catch {
+      const sanitizedBase = rawBase.replace(/\/+$/, '') || '/'
+
+      if (sanitizedBase !== '/') {
+        routerProps = { basename: sanitizedBase.startsWith('/') ? sanitizedBase : `/${sanitizedBase}` }
+      }
+    }
+  }
 
   return (
     <Router {...routerProps}>
