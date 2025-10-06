@@ -14,6 +14,8 @@ export type LessonSectionType = 'theory' | 'activity' | 'project' | 'reflection'
 export interface LessonSectionItem {
   title: string
   detail: string
+  code?: string
+  language?: 'css' | 'scss' | 'sass' | 'less' | 'html' | 'javascript' | 'typescript'
 }
 
 export interface LessonTeachingSection {

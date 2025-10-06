@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { learningStages } from '@/types/learningStages'
 import type { LessonSectionType } from '@/types'
 import { Button } from '@/components/Button'
+import { CodeBlock } from '@/components/CodeBlock'
 import { CourseNavigation } from '@/components/CourseNavigation'
 
 const sectionTypeLabelMap: Record<LessonSectionType, string> = {
@@ -105,7 +106,16 @@ export function LessonPage() {
                         className="rounded-2xl border border-slate-200/70 dark:border-slate-700/70 bg-slate-50/70 dark:bg-slate-900/60 p-4"
                       >
                         <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.title}</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">{item.detail}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed whitespace-pre-line">
+                          {item.detail}
+                        </p>
+                        {item.code ? (
+                          <CodeBlock
+                            code={item.code}
+                            language={item.language}
+                            className="mt-3"
+                          />
+                        ) : null}
                       </div>
                     ))}
                   </div>
