@@ -1,12 +1,31 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  type BrowserRouterProps,
+  Routes,
+  Route,
+  Navigate
+} from 'react-router-dom'
 
 import { HomePage } from '@/pages/HomePage'
 import { ModulePage } from '@/pages/ModulePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 function App() {
+  const rawBase = import.meta.env.BASE_URL || '/'
+  const normalizedBase =
+    rawBase === './'
+      ? '/'
+      : rawBase.replace(/\/+$/, '') || '/'
+
+  const routerProps: BrowserRouterProps =
+    normalizedBase === '/'
+      ? {}
+      : {
+          basename: normalizedBase
+        }
+
   return (
-    <Router>
+    <Router {...routerProps}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/lesson/:lessonId" element={<ModulePage />} />
