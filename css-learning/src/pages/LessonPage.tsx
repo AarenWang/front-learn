@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { learningStages } from '@/types/learningStages'
 import type { LessonSectionType } from '@/types'
 import { Button } from '@/components/Button'
+import { CourseNavigation } from '@/components/CourseNavigation'
 
 const sectionTypeLabelMap: Record<LessonSectionType, string> = {
   theory: '知识讲解',
@@ -56,7 +57,10 @@ export function LessonPage() {
         </div>
       </div>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* 主要内容区域 */}
+          <div className="lg:col-span-3 space-y-8">
         {stage.teachingSections && stage.teachingSections.length > 0 ? (
           <section className="space-y-6">
             <div className="flex flex-col gap-2">
@@ -190,6 +194,15 @@ export function LessonPage() {
             </ul>
           </div>
         </section>
+          </div>
+
+          {/* 侧边栏导航 */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8">
+              <CourseNavigation />
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   )
