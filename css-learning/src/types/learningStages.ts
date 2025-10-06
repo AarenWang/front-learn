@@ -75,15 +75,18 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '表现与结构分离的背景',
-            detail: '回顾 1994 年 Håkon Wium Lie 提出 CSS 的动机，说明 HTML4 时代为何需要独立样式层。'
+            detail:
+              '回顾 1994 年 Håkon Wium Lie 在 CERN 发布《Cascading HTML style sheets — a proposal》的原始动机，列出 HTML 3.2 时代内联样式与 <font> 标签导致的维护痛点。\n引用 CSS1 规范导言（https://www.w3.org/TR/REC-CSS1/）中对 cascade 的描述，引导学员理解“表现与结构分离”的术语如何影响浏览器实现。'
           },
           {
             title: 'CSS Level 演进里程碑',
-            detail: '梳理 CSS1、CSS2.1 到 CSS3 模块化的关键事件，理解从单体规范走向模块化的原因。'
+            detail:
+              '绘制包含 CSS1（1996）、CSS2.1（2011）与模块化 CSS3 的时间轴，结合官方状态页标注 Recommendation、Candidate Recommendation 与 Working Draft 的差异。\n补充 CSS4 并非单一规范而是一组模块的现实案例，帮助学员理解为何需要模块化并行迭代。'
           },
           {
             title: '浏览器大战与标准化',
-            detail: '以 IE 与 Netscape 竞争为例，强调兼容性问题如何推动浏览器厂商加入标准化流程。'
+            detail:
+              '以 1998 年“浏览器大战”为背景，展示 IE5、Netscape 4 在 CSS1 实现差异造成的兼容性问题，并引用 Acid1/Acid2 测试的出现。\n说明厂商加入 W3C CSSWG、WHATWG 的协同机制如何改善标准落地，强调测试套件对规范推进的价值。'
           }
         ],
         tools: ['MDN CSS Timeline', 'W3C Archive'],
@@ -99,15 +102,18 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: 'W3C 架构与 CSSWG 职责',
-            detail: '说明 W3C 技术架构、工作组运作方式，以及 Editors Draft、Candidate Recommendation 的发布节奏。'
+            detail:
+              '拆解 W3C 结构中 Advisory Committee、Technical Architecture Group 与 CSS Working Group 的分工，明确规范从 Working Draft 到 Proposed Recommendation 的投票流程。\n结合 CSSWG Charter 说明 Editors Draft 如何通过 GitHub 管理 issue、更新 Change Log。'
           },
           {
             title: 'WHATWG 与 HTML 协作',
-            detail: '介绍 WHATWG Living Standard 与 W3C 的关系，讲解 HTML/CSS 协调接口的运作方式。'
+            detail:
+              '对比 WHATWG HTML Living Standard 与 W3C HTML Recommendation 的协作方式，强调通过「Bikeshed + Shepherd」生成规范文档。\n展示 CSS 与 HTML 合作的典型接口（如 <link rel="stylesheet"> 与 Constructable Stylesheets）及其提案来源。'
           },
           {
             title: '跨规范协同生态',
-            detail: '补充 ECMAScript、Web Platform Tests 等生态成员，帮助构建完整的前端规范地图。'
+            detail:
+              '列举与 CSS 密切相关的工作组：TC39、SVG Working Group、Web Platform Tests 社区，并说明它们在统一 API 体验中的角色。\n以 WPT 测试套件为例，讲解如何通过 pr builds 验证新属性的互操作性。'
           }
         ],
         tools: ['W3C TR', 'CSSWG GitHub', 'WHATWG Standards']
@@ -122,15 +128,18 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: 'TR 与 Editors Draft 的区别',
-            detail: '比较 /TR/ 与 GitHub Editors Draft 的差异，演示如何阅读 Status of This Document 部分。'
+            detail:
+              '演示在 https://www.w3.org/TR/css/ 下查找 Flexbox 规范的 TR 链接，并与 https://drafts.csswg.org/css-flexbox/ 的 Editors Draft 做逐段对比。\n重点拆解「Status of This Document」与「Changes」章节，说明为何实际实现应以 Editors Draft 为准。'
           },
           {
             title: 'CSSOM 接口速览',
-            detail: '介绍 CSSOM、StyleSheetList 与 CSSStyleRule 等接口在浏览器中的映射，理解渲染引擎如何消费 CSS。'
+            detail:
+              '通过 Chrome DevTools 的 Sources → Page 面板查看 document.styleSheets，映射到 CSSOM 中的 StyleSheetList、CSSRuleList、CSSStyleRule 等接口。\n结合 MDN（https://developer.mozilla.org/docs/Web/API/CSS_Object_Model）说明这些接口在样式计算阶段的作用。'
           },
           {
             title: 'Issue 追踪与会议纪要',
-            detail: '演示 CSSWG GitHub issue 与会议纪要，练习提炼讨论背景与当前进展。'
+            detail:
+              '打开 https://github.com/w3c/csswg-drafts/issues 的 label:flexbox 议题，提炼 issue 模板中「Specification」「Summary」等字段。\n配合 CSSWG 会议纪要（https://lists.w3.org/Archives/Public/www-style/）练习记录讨论时间、决议与后续行动人。'
           }
         ],
         tools: ['Chrome DevTools', 'CSSWG Minutes'],
@@ -146,15 +155,18 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '信息架构规划',
-            detail: '规划笔记结构：组织关系图、时间线与模块索引，确定 Markdown 或 Notion 模板。'
+            detail:
+              '列出笔记的三大结构：组织关系图（W3C ↔ WHATWG ↔ CSSWG）、里程碑时间线、模块化索引，并为每个部分预留链接区域。\n示范在 Notion/Markdown 中插入折叠目录与外部链接引用，确保后续可持续维护。'
           },
           {
             title: '资料采集与标注',
-            detail: '从 W3C TR 与 CSSWG 仓库收集链接，记录状态、发布日期与编辑者备注。'
+            detail:
+              '从 https://www.w3.org/TR/css/ 抽取至少五个核心模块（如 Color、Cascade、Selectors），记录最新状态、发布日期、编辑者名单。\n同步在 CSSWG GitHub 中引用对应该模块的 issue/PR，并在笔记中使用 tag 标记“待跟进”。'
           },
           {
             title: 'Flexbox 草案拆读',
-            detail: '聚焦 Flexbox 规范导言与关键章节，提炼术语解释并补充个人理解。'
+            detail:
+              '聚焦 Flexbox 规范的「Abstract」「Terminology」「Flex Formatting Context」章节，标注关键术语（flex container、main axis、flex base size）。\n结合 MDN 指南核对术语翻译，并写下自己的理解或尚存疑问，形成可复盘的读书笔记。'
           }
         ],
         tools: ['Notion 或 Obsidian', 'diagrams.net', 'MDN Spec Index'],
@@ -205,15 +217,36 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '规则集与声明块剖析',
-            detail: '拆解选择器、声明、属性与值的组成，强调声明结束符、注释与空白的规范写法。'
+            detail:
+              '结合 CSS Syntax Level 3 中的正式定义，拆解选择器、声明、属性名、冒号、值与分号之间的必需结构。\n演示如何通过语法高亮识别无效 token，并强调注释、空白字符不会改变声明块含义但影响可读性。',
+            codeExample: {
+              title: '合法的规则集结构示例',
+              language: 'css',
+              content:
+                '@layer components {\n  article.card[data-state="active"] {\n    --card-shadow: 0 18px 40px -24px hsl(220 40% 30% / 0.45);\n    background: var(--surface-1);\n    transition: box-shadow 200ms ease;\n  }\n}'
+            }
           },
           {
             title: 'At-rule 分类与嵌套',
-            detail: '对比 @import、@media、@supports、@layer 的语法结构，演示条件规则与嵌套写法。'
+            detail:
+              '解释 at-rule 按照 “语句型（statement）” 与 “块级（block）” 的分类方式，说明哪些规则允许嵌套。\n逐条比较 @import、@media、@supports、@layer 在 CSS Syntax 规范中的 BNF 结构，展示条件规则如何与自定义属性组合。',
+            codeExample: {
+              title: '条件 at-rule 组合范式',
+              language: 'css',
+              content:
+                '@import url("open-props") layer(design-tokens);\n\n@layer design-tokens {\n  :root {\n    --brand-hue: 220;\n    --brand-sat: 88%;\n  }\n}\n\n@layer components {\n  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {\n    @supports (animation-timeline: view()) {\n      .hero {\n        animation: fade-in 600ms ease-out;\n      }\n    }\n  }\n}'
+            }
           },
           {
             title: '语法容错机制',
-            detail: '通过 Live Coding 演示浏览器如何跳过无效声明，引出严格 lint 的必要性。'
+            detail:
+              '引用 CSS2.1 4.2 节说明 UA 如何在遇到未知属性或值时跳过整条声明，并强调错误不会阻塞后续解析。\n通过现场演示展示多个错误并确认 DevTools 中的「invalid property value」提示，引出使用 lint 保证一致性的必要。',
+            codeExample: {
+              title: '容错策略对比',
+              language: 'css',
+              content:
+                '.button {\n  background-colr: #4f46e5; /* 拼写错误，浏览器会忽略 */\n  background-color: hsl(244 92% 60%);\n  padding: clamp(0.625rem, 2vw, 1rem);\n}'
+            }
           }
         ],
         tools: ['MDN CSS Syntax', 'CodePen']
@@ -228,15 +261,36 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '绝对与相对长度计算',
-            detail: '总结 px、rem、em、vw/vh 等单位的计算基准与常见换算误区，强调响应式场景的取舍。'
+            detail:
+              '对照 CSS Values & Units Level 4 中的长度定义，分辨 px、rem、em、vw、vh、vi 的基准值与缩放方式。\n演示通过调整根字体与视口宽度观察 rem/em 的换算，记录常见误区如「嵌套 em 累积效应」。',
+            codeExample: {
+              title: '长度单位换算示例',
+              language: 'css',
+              content:
+                ':root {\n  font-size: 16px;\n}\n\n.card {\n  padding-inline: clamp(1.25rem, 4vw, 2.5rem);\n  min-height: calc(18rem + 4vh);\n}'
+            }
           },
           {
             title: '颜色函数与色域比较',
-            detail: '在 DevTools 中对比 hex、rgb、hsl、lab/lch 的呈现，说明现代颜色模型的优势。'
+            detail:
+              '引用 CSS Color Module Level 4 的色彩模型章节，比较 sRGB、HSL、LAB/LCH 的色域覆盖范围与可读性。\n使用 Chrome DevTools「Color Picker」展示不同模型的预览，补充 Safari/Chromium 对 display-p3 支持现状。',
+            codeExample: {
+              title: '现代颜色函数写法',
+              language: 'css',
+              content:
+                ':root {\n  --brand: color(display-p3 0.4 0.35 0.92);\n  --brand-muted: lch(62% 24 280);\n}\n\n.button-primary {\n  background: var(--brand);\n  color: oklch(98% 0.04 240);\n}'
+            }
           },
           {
             title: '函数值与 calc 组合',
-            detail: '讲解 calc()/min()/max() 的解析顺序，以及与自定义属性结合时的注意事项。'
+            detail:
+              '拆解 calc()/min()/max() 在规范中的解析顺序，强调单位需兼容、运算会在 computed value 阶段执行。\n展示自定义属性与函数组合时需提供回退值的写法，避免变量为空导致计算失败。',
+            codeExample: {
+              title: 'calc 与 CSS 变量协同',
+              language: 'css',
+              content:
+                ':root {\n  --column-gap: 1.5rem;\n}\n\n.grid-auto {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(min(22ch, 100%), 1fr));\n  gap: max(var(--column-gap), 1.25rem);\n}'
+            }
           }
         ],
         tools: ['Chrome DevTools Colors', 'Color.js Playground']
@@ -251,15 +305,30 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: 'Lint 规则与自动化',
-            detail: '配置 Stylelint 或 ESLint Style 插件，演示 declaration-block-trailing-semicolon 等关键规则。'
+            detail:
+              '在 Stylelint 官方配置（https://stylelint.io/user-guide/rules）中挑选针对语法正确性的核心规则，如 declaration-block-trailing-semicolon、no-duplicate-selectors。\n演示如何在 CI 中运行 stylelint --max-warnings=0 并结合 Prettier/EditorConfig 保持一致格式。',
+            codeExample: {
+              title: 'stylelint.config.js 片段',
+              language: 'javascript',
+              content:
+                'export default {\n  extends: ["stylelint-config-standard"],\n  rules: {\n    "color-no-invalid-hex": true,\n    "block-no-empty": true,\n    "selector-max-id": 0\n  }\n}'
+            }
           },
           {
             title: 'Design Token 命名',
-            detail: '制定 :root 变量命名、注释模板与层叠层划分，形成 reset/base/theme 的结构。'
+            detail:
+              '遵循 W3C Design Tokens Community Group 推荐的 token 命名模式，拆分 brand、surface、state 等语义域。\n示范 :root 中通过 @layer reset/base/theme 划分作用域，并用注释标注 token 来源与可访问性指标。',
+            codeExample: {
+              title: ':root Token 示例',
+              language: 'css',
+              content:
+                '@layer tokens {\n  :root {\n    /* Brand identity */\n    --color-brand-600: oklch(54% 0.22 264);\n    --color-brand-foreground: oklch(98% 0.02 260);\n    /* Elevation */\n    --shadow-lg: 0 24px 48px -24px hsl(234 70% 15% / 0.32);\n  }\n}'
+            }
           },
           {
             title: '多人协作文件结构',
-            detail: '确定样式文件拆分策略与导入顺序，避免全局命名冲突与样式回归。'
+            detail:
+              '结合 ITCSS/BEM 架构划分 base、objects、components、utilities 层级，说明每层的命名约定与约束。\n讨论在 Vite/React 项目中使用 @layer、@import 或 CSS Modules 的组织方式，制定导入顺序与变更评审清单。'
           }
         ],
         tools: ['Stylelint', 'VS Code', 'Design Token 工具']
@@ -274,15 +343,36 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '搭建文件骨架',
-            detail: '创建 variables.css、base.css、typography.css，并通过 @import 或 @layer 管理加载顺序。'
+            detail:
+              '规划 tokens、base、components 三个层级的入口文件，并确认在 Vite 中的导入顺序与缓存策略。\n演示如何使用 @layer 或 PostCSS import 插件管理依赖，确保构建产物层叠关系可控。',
+            codeExample: {
+              title: 'main.css 入口结构',
+              language: 'css',
+              content:
+                '@import url("./styles/tokens.css") layer(tokens);\n@import url("./styles/base.css") layer(base);\n@import url("./styles/typography.css") layer(components);'
+            }
           },
           {
             title: '主题色与对比度校验',
-            detail: '使用 HSL/LCH 定义主副色、状态色，结合 prefers-color-scheme 设置暗色模式回退值。'
+            detail:
+              '依据 WCAG 2.2 AA 标准，使用工具测量按钮/文本对比度大于 4.5:1。\n在 prefers-color-scheme 媒体查询内提供暗色主题的对比色，并记录 fallback 机制（如强制 light 主题时的备用色）。',
+            codeExample: {
+              title: '主题色与暗色回退',
+              language: 'css',
+              content:
+                ':root {\n  --color-primary: oklch(63% 0.21 270);\n  --color-on-primary: oklch(98% 0.02 260);\n}\n\n@media (prefers-color-scheme: dark) {\n  :root {\n    --color-primary: oklch(72% 0.18 264);\n    --color-on-primary: oklch(20% 0.02 260);\n  }\n}\n\n.button-primary {\n  background: var(--color-primary);\n  color: var(--color-on-primary);\n}'
+            }
           },
           {
             title: '排版模块验证',
-            detail: '在示例页面挂载 typography.css，检查标题、正文、代码块的层叠顺序与可读性。'
+            detail:
+              '编写 typography.css 覆盖 heading、正文、代码块与引用，确保字体栈、行高、字距符合阅读体验。\n在示例页面加载模块并通过 DevTools Inspect 验证层叠顺序、对比度与多语言字符覆盖。',
+            codeExample: {
+              title: 'typography.css 节选',
+              language: 'css',
+              content:
+                '@layer components.typography {\n  h1, h2, h3 {\n    font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;\n    line-height: 1.15;\n    letter-spacing: -0.01em;\n  }\n\n  pre, code {\n    font-family: "JetBrains Mono", SFMono-Regular, Consolas, monospace;\n    font-size: clamp(0.85rem, 0.8rem + 0.3vw, 0.95rem);\n    background: color-mix(in srgb, var(--color-primary) 8%, white);\n  }\n}'
+            }
           }
         ],
         tools: ['Stylelint CLI', 'VS Code Live Server', 'Polypane'],
@@ -333,15 +423,30 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '样式来源与重要性层级',
-            detail: '解释浏览器默认样式、用户样式、作者样式的优先级，以及 !important 在不同来源中的位置。'
+            detail:
+              '引用 Cascade Level 5 第 6 章，梳理 User-Agent、User、Author 三类来源以及 normal/important 的排序，并补充 Transition、Animation 两个特殊来源。\n通过表格对比不同来源叠加时的取舍，提醒团队在组件库中保留用户样式入口。'
           },
           {
             title: 'Specificity 计算模型',
-            detail: '通过手算示例讲解权重向量 (a,b,c,d)，覆盖类型、类、伪类、ID 与内联样式。'
+            detail:
+              '拆解 CSS Selectors Level 4 中的 specificity 定义，将权重向量 (a,b,c,d) 对应到 inline style、ID、class/属性/伪类、类型选择器。\n手算多组示例并引导学员使用 Specificity Calculator 交叉验证，理解 :where()/:is() 的权重特性。',
+            codeExample: {
+              title: 'Specificity 权重示例',
+              language: 'css',
+              content:
+                '/* 权重 (0,1,1,1) */\n.card.hero[data-state="active"] > h2::first-line {\n  color: var(--color-primary);\n}\n\n/* :where() 不增加权重 */\n.where-example :where(.cta-button.is-primary) {\n  background: var(--color-primary);\n}'
+            }
           },
           {
             title: 'DevTools 层叠演示',
-            detail: '使用 Chrome DevTools Cascade 面板展示最终命中规则与被覆盖的声明。'
+            detail:
+              '使用 Chrome DevTools Styles → Cascade 面板，演练如何定位被覆盖的规则、查看来源（User Agent / Author）。\n教会学员使用「Show all matching rules」与「Toggle :hover」功能，并截图记录冲突解决前后的状态。',
+            codeExample: {
+              title: '对比层叠的演示代码',
+              language: 'css',
+              content:
+                '@layer base {\n  button {\n    background: var(--surface-muted);\n  }\n}\n\n@layer components {\n  button.primary {\n    background: var(--color-primary);\n  }\n}\n\n@layer overrides {\n  button.primary {\n    background: var(--color-alert); /* 在 DevTools 中展示覆盖 */\n  }\n}'
+            }
           }
         ],
         tools: ['Chrome DevTools Styles', 'Specificity Calculator']
@@ -356,15 +461,30 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '继承属性清单',
-            detail: '梳理 color、font、line-height 等可继承属性与 non-inherited 属性的差异。'
+            detail:
+              '基于 Cascade Level 5 附录 A 的表格列出常见可继承属性（color、font-family、line-height、text-align 等）与非继承属性，并解释 computed value 与 inherited value 的区别。\n结合 DevTools Computed 面板验证继承链，记录组件需要显式重置的属性。'
           },
           {
             title: 'initial/inherit/unset/revert',
-            detail: '对比四个关键字的语义，演示 revert-layer 在多层样式体系中的应用。'
+            detail:
+              '对比 initial（回到规范默认值）、inherit（继承父级）、unset（因属性是否继承而定）与 revert（回退至上一层 cascade）的作用。\n实操演示在 @layer 体系中使用 revert-layer 快速撤销覆盖，强调与 revert 的差别。',
+            codeExample: {
+              title: '继承控制关键词',
+              language: 'css',
+              content:
+                '.prose a {\n  color: var(--color-primary);\n  text-decoration: underline;\n}\n\n.prose.dark a {\n  color: inherit; /* 继承父级颜色 */\n}\n\n@layer overrides {\n  .prose a {\n    color: revert-layer;\n  }\n}'
+            }
           },
           {
             title: '现代 Reset 策略',
-            detail: '讨论 normalize.css、modern-css-reset 与 @layer reset 的选择与组合方式。'
+            detail:
+              '比较 normalize.css、modern-css-reset、Andy Bell 的「CUBE CSS」reset 在可访问性与可维护性上的差异，明确各自适合的项目规模。\n示范使用 @layer reset 隔离重置层，并记录需要保留的浏览器默认样式（如 :focus 可访问描边）。',
+            codeExample: {
+              title: '分层 Reset 模板',
+              language: 'css',
+              content:
+                '@layer reset {\n  *, *::before, *::after {\n    box-sizing: border-box;\n  }\n\n  body {\n    margin: 0;\n    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;\n  }\n\n  :focus-visible {\n    outline: 3px solid var(--color-primary);\n    outline-offset: 3px;\n  }\n}'
+            }
           }
         ],
         tools: ['MDN Cascade', 'DevTools Computed 面板']
@@ -379,15 +499,30 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '层叠层与命名空间',
-            detail: '结合 @layer 与 BEM 命名，规划 utilities、components、overrides 的覆盖关系。'
+            detail:
+              '设计 reset → tokens → base → components → utilities → overrides 的层叠层顺序，并将 BEM 命名空间映射到相应层级。\n强调 @layer 的声明顺序决定权重，要求学员在项目模板中固定导入顺序并记录在贡献指南。',
+            codeExample: {
+              title: '层叠层规范',
+              language: 'css',
+              content:
+                '@layer reset, tokens, base, components, utilities, overrides;\n\n@layer components {\n  .c-card {\n    padding: var(--space-m);\n  }\n}\n\n@layer utilities {\n  .u-text-center {\n    text-align: center;\n  }\n}'
+            }
           },
           {
             title: '调试诊断流程',
-            detail: '演示强制状态、Computed 面板与覆盖高亮，快速定位样式冲突。'
+            detail:
+              '总结定位冲突的五步法：定位 DOM→查看 Styles 面板→切换 cascade 层→使用 :hover/:focus 强制状态→对比 Computed 面板数值。\n演示「force state」「scroll into view」「layout shift regions」等工具如何协助排查。'
           },
           {
             title: '!important 替代方案',
-            detail: '总结变量重构、作用域划分与组件 API 控制等替代 !important 的手段。'
+            detail:
+              '从架构角度拆解为何滥用 !important 会破坏可维护性，提出变量重构、组件属性透传、@layer overrides、数据属性 hooks 等替代策略。\n列出团队审批流程：新增 !important 必须附带场景描述、替代方案评估与回滚计划。',
+            codeExample: {
+              title: '通过数据属性替代 !important',
+              language: 'css',
+              content:
+                '.modal[data-variant="danger"] .modal__primary-action {\n  background: var(--color-danger-600);\n}\n\n.modal.is-emergency .modal__primary-action {\n  background: var(--color-danger-700);\n  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-700) 45%, transparent);\n}'
+            }
           }
         ],
         tools: ['Chrome DevTools', 'Stylelint Order 插件']
@@ -402,15 +537,24 @@ export const learningStages: LearningStage[] = [
         items: [
           {
             title: '场景搭建',
-            detail: '设计卡片、按钮、弹窗等嵌套结构，刻意安排不同 specificity 的规则组合。'
+            detail:
+              '构建含导航、模态、卡片、表单的页面，并刻意安排行内样式、ID、BEM 类、属性选择器的混合，制造冲突。\n要求每个组件至少包含一个 @layer overrides 与主题切换数据属性，为后续分析提供案例。',
+            codeExample: {
+              title: '冲突示例 DOM 片段',
+              language: 'html',
+              content:
+                '<div class="layout" data-theme="dark">\n  <aside id="dashboard-nav">...</aside>\n  <main>\n    <article class="card card--featured" style="border-color: #6366f1">\n      <button class="card__cta" data-variant="primary">提交</button>\n    </article>\n  </main>\n</div>'
+            }
           },
           {
             title: '冲突记录矩阵',
-            detail: '使用表格记录每条规则的来源、权重与最终结果，保存 DevTools 证据。'
+            detail:
+              '在 Notion/Google Sheet 创建“选择器、来源、权重、最终应用、备注”字段，记录每次覆盖的发生原因。\n要求附上 DevTools 截图或代码片段，确保后续复盘可追溯。'
           },
           {
             title: '改进策略总结',
-            detail: '整理避免滥用 !important 的策略，并形成组件层叠规范文档。'
+            detail:
+              '根据矩阵中的问题归纳命名空间、层叠层、变量抽象、组件 API 控制等改进策略，并写入团队样式指南。\n输出 checklist：新增规则需标注层叠层、引入 overrides 必须评审、需要时为组件暴露自定义属性钩子。'
           }
         ],
         tools: ['Notion 表格', 'Chrome DevTools Recorder'],

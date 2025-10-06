@@ -11,9 +11,16 @@ export interface StageModuleMeta {
 
 export type LessonSectionType = 'theory' | 'activity' | 'project' | 'reflection'
 
+export interface LessonSectionItemCodeExample {
+  language: string
+  content: string
+  title?: string
+}
+
 export interface LessonSectionItem {
   title: string
   detail: string
+  codeExample?: LessonSectionItemCodeExample
 }
 
 export interface LessonTeachingSection {
