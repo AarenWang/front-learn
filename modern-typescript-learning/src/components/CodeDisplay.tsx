@@ -1,4 +1,4 @@
-import { useMemo, type HTMLAttributes } from 'react'
+import { useEffect, useState, type HTMLAttributes } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import nightOwl from 'react-syntax-highlighter/dist/esm/styles/prism/night-owl'
 import prettier from 'prettier/standalone'
@@ -59,7 +59,7 @@ function normalizeLanguage(language?: string) {
   return LANGUAGE_ALIASES[normalized] ?? normalized
 }
 
-function formatCode(code: string, languageKey: string) {
+async function formatCode(code: string, languageKey: string) {
   const trimmedCode = code.trim()
   if (!trimmedCode) {
     return ''
@@ -68,18 +68,18 @@ function formatCode(code: string, languageKey: string) {
   const formatter = PRETTIER_LANGUAGE_MAP[languageKey] ?? PRETTIER_LANGUAGE_MAP[DEFAULT_LANGUAGE]
 
   try {
-    return prettier
-      .format(trimmedCode, {
-        parser: formatter.parser,
-        plugins: formatter.plugins,
-        singleQuote: true,
-        semi: false,
-        trailingComma: 'es5',
-        tabWidth: 2,
-        bracketSpacing: true,
-        printWidth: 80,
-      })
-      .trimEnd()
+    const result = await prettier.format(trimmedCode, {
+      parser: formatter.parser,
+      plugins: formatter.plugins,
+      singleQuote: true,
+      semi: false,
+      trailingComma: 'es5',
+      tabWidth: 2,
+      bracketSpacing: true,
+      printWidth: 80,
+    })
+
+    return result.trimEnd()
   } catch (error) {
     console.warn('CodeDisplay: failed to format code snippet', error)
     return trimmedCode
@@ -95,10 +95,28 @@ export function CodeDisplay({
 }: CodeDisplayProps) {
   const normalizedLanguage = normalizeLanguage(language) ?? DEFAULT_LANGUAGE
 
-  const formattedCode = useMemo(
-    () => formatCode(code, normalizedLanguage),
-    [code, normalizedLanguage],
-  )
+  const [formattedCode, setFormattedCode] = useState(() => code.trim())
+
+  useEffect(() => {
+    let isActive = true
+
+    formatCode(code, normalizedLanguage)
+      .then((result) => {
+        if (isActive) {
+          setFormattedCode(result)
+        }
+      })
+      .catch((error) => {
+        console.warn('CodeDisplay: failed to format code snippet', error)
+        if (isActive) {
+          setFormattedCode(code.trim())
+        }
+      })
+
+    return () => {
+      isActive = false
+    }
+  }, [code, normalizedLanguage])
 
   return (
     <div
