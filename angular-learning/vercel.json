@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm build",
-  "outputDirectory": "dist/angular-learning",
+  "outputDirectory": "dist/angular-learning/browser",
   "framework": "angular",
   "installCommand": "pnpm install",
   "devCommand": "pnpm start",
