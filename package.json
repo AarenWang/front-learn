@@ -1,0 +1,12 @@
+{
+  "name": "front-learn",
+  "private": true,
+  "packageManager": "pnpm@8.15.8",
+  "scripts": {
+    "postinstall": "pnpm --dir react-ts-learning install",
+    "build": "pnpm --dir react-ts-learning run build",
+    "lint": "pnpm --dir react-ts-learning run lint",
+    "test": "pnpm --dir react-ts-learning run test",
+    "typecheck": "pnpm --dir react-ts-learning run typecheck"
+  }
+}
