@@ -176,7 +176,7 @@ const initialTasks: Task[] = [
 
 const statusFlow: TaskStatus[] = ['todo', 'in-progress', 'done']
 
-const useTaskStore = create<TaskStore>((set, get) => ({
+const useTaskStore = create<TaskStore>((set) => ({
   tasks: initialTasks,
   filter: 'all',
   addTask: task =>

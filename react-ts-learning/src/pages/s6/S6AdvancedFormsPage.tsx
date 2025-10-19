@@ -35,7 +35,7 @@ type WorkshopFormValues = {
 const profileSchema = z.object({
   name: z.string().min(2, '名字至少 2 个字符'),
   email: z.string().email('请输入有效邮箱'),
-  role: z.enum(['frontend', 'design', 'product'], { errorMap: () => ({ message: '请选择角色' }) }),
+  role: z.enum(['frontend', 'design', 'product'] as const, { message: '请选择角色' }),
   bio: z.string().min(10, '请描述学习背景（至少 10 字）'),
   notifications: z.boolean(),
   onboardingDate: z.string().min(1, '请选择入组日期'),
@@ -52,7 +52,7 @@ const workshopSchema = z.object({
       z.object({
         name: z.string().min(2, '成员姓名至少 2 个字符'),
         email: z.string().email('请输入成员邮箱'),
-        experience: z.enum(['junior', 'mid', 'senior'])
+  experience: z.enum(['junior', 'mid', 'senior'] as const)
       })
     )
     .min(1, '至少添加一名成员')
