@@ -1,4 +1,9 @@
-import Highlight, { defaultProps, themes, type Language } from 'prism-react-renderer'
+import {
+  Highlight,
+  themes,
+  type Language,
+  type RenderProps,
+} from 'prism-react-renderer'
 
 interface CodeBlockProps {
   code: string
@@ -10,13 +15,14 @@ export function CodeBlock({ code, language = 'css', className }: CodeBlockProps)
   const trimmed = code.trim()
 
   return (
-    <Highlight
-      {...defaultProps}
-      theme={themes.nightOwl}
-      code={trimmed}
-      language={language}
-    >
-      {({ className: inheritedClassName, style, tokens, getLineProps, getTokenProps }) => (
+    <Highlight theme={themes.nightOwl} code={trimmed} language={language}>
+      {({
+        className: inheritedClassName,
+        style,
+        tokens,
+        getLineProps,
+        getTokenProps,
+      }: RenderProps) => (
         <pre
           className={`rounded-2xl border border-slate-700/40 bg-slate-900/90 text-sm leading-relaxed overflow-auto shadow-inner ${
             inheritedClassName ?? ''
