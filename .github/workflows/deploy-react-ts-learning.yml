@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     defaults:
-      runs:
+      run:
         working-directory: ./react-ts-learning
     steps:
       - name: Checkout code
