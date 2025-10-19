@@ -15,6 +15,15 @@ AI Vibing Code 的前端学习项目集合。仓库收录了 React、TypeScript�
 
 ---
 
+## 项目访问地址
+
+- [现代 TypeScript+Reactor 学习项目](https://react-ts-learning.vercel.app/)
+- [现代 TypeScript 学习项目](https://modern-typescript-learning.vercel.app/)
+- [现代 JavaScript 学习项目](https://modern-javascript-learning.vercel.app/)
+- [现代 CSS 学习项目](https://css-learning-gules.vercel.app/)
+- [Angular 学习项目](https://angular-learning-kappa.vercel.app/)
+- [前端生态工具指南](https://frontend-ecosystem-tools-learning.vercel.app/)
+
 ## 📚 项目详情
 
 ### React + TypeScript 学习路线（`react-ts-learning/`）
