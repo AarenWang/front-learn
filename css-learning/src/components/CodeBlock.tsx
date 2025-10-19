@@ -1,5 +1,4 @@
-import Highlight, { defaultProps, type Language } from 'prism-react-renderer'
-import nightOwl from 'prism-react-renderer/themes/nightOwl'
+import Highlight, { defaultProps, themes, type Language } from 'prism-react-renderer'
 
 interface CodeBlockProps {
   code: string
@@ -13,7 +12,7 @@ export function CodeBlock({ code, language = 'css', className }: CodeBlockProps)
   return (
     <Highlight
       {...defaultProps}
-      theme={nightOwl}
+      theme={themes.nightOwl}
       code={trimmed}
       language={language}
     >
