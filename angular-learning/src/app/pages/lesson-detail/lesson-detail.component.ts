@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common'
 import { Component, computed, inject, signal } from '@angular/core'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { LESSONS } from '../../data/learning-plan'
-import { Lesson, LessonLevel } from '../../models/lesson.model'
+import { LESSONS, LESSON_SECTIONS } from '../../data/learning-plan'
+import { Lesson, LessonLevel, LessonSection } from '../../models/lesson.model'
 import { LearningProgressService } from '../../services/learning-progress.service'
 
 @Component({
@@ -19,6 +19,7 @@ export class LessonDetailComponent {
   private readonly progressService = inject(LearningProgressService)
 
   readonly lessons = [...LESSONS].sort((a, b) => a.order - b.order)
+  readonly sections = LESSON_SECTIONS
   readonly lessonId = signal<string | null>(this.route.snapshot.paramMap.get('lessonId'))
 
   readonly lesson = computed(() => {
@@ -40,6 +41,15 @@ export class LessonDetailComponent {
     const index = this.lessonIndex()
     return index >= 0 && index < this.lessons.length - 1 ? this.lessons[index + 1] : null
   })
+
+  readonly groupedLessons = computed(() =>
+    this.sections
+      .map((section) => ({
+        section,
+        lessons: this.lessons.filter((lesson) => lesson.section === section.name),
+      }))
+      .filter((group) => group.lessons.length > 0)
+  )
 
   readonly levelLabel: Record<LessonLevel, string> = {
     foundation: '基础',
@@ -68,5 +78,13 @@ export class LessonDetailComponent {
       return
     }
     this.router.navigate(['/lessons', lesson.id])
+  }
+
+  trackByGroupId(_: number, group: { section: LessonSection }) {
+    return group.section.id
+  }
+
+  trackByLessonId(_: number, lesson: Lesson) {
+    return lesson.id
   }
 }
