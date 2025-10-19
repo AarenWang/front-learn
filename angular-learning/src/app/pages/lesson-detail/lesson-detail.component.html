@@ -1,85 +1,111 @@
 <ng-container *ngIf="lesson() as lesson; else missingLesson">
-  <div class="lesson">
-    <nav class="lesson__breadcrumbs" aria-label="breadcrumbs">
-      <a routerLink="/">首页</a>
-      <span>/</span>
-      <span>{{ lesson.section }}</span>
-      <span>/</span>
-      <span>{{ lesson.title }}</span>
-    </nav>
-
-    <header class="lesson__header">
-      <div>
-        <p class="lesson__meta">{{ lesson.section }} · {{ levelLabel[lesson.level] }}课 · 预计 {{ lesson.estimatedHours }} 小时</p>
+  <div class="lesson-page">
+    <header class="lesson-hero">
+      <div class="lesson-hero__info">
+        <span class="lesson-hero__eyebrow">{{ lesson.section }} · {{ levelLabel[lesson.level] }}课 · 预计 {{ lesson.estimatedHours }} 小时</span>
         <h1>S{{ lesson.order }} · {{ lesson.title }}</h1>
-        <p class="lesson__summary">{{ lesson.summary }}</p>
+        <p class="lesson-hero__summary">{{ lesson.summary }}</p>
+        <div class="lesson-hero__meta">
+          <div>
+            <h2>前置知识</h2>
+            <ul>
+              <li *ngFor="let item of lesson.prerequisites">{{ item }}</li>
+            </ul>
+          </div>
+          <div>
+            <h2>标签</h2>
+            <div class="lesson-tags">
+              <span *ngFor="let tag of lesson.tags">{{ tag }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <button type="button" class="lesson__cta" [class.lesson__cta--done]="isCompleted(lesson.id)" (click)="toggleCompletion(lesson)">
+      <button type="button" class="lesson-hero__cta" [class.lesson-hero__cta--done]="isCompleted(lesson.id)" (click)="toggleCompletion(lesson)">
         {{ isCompleted(lesson.id) ? '已完成' : '标记完成' }}
       </button>
     </header>
 
-    <section class="lesson__content">
-      <article class="lesson__card">
-        <h2>核心知识点</h2>
-        <ul>
-          <li *ngFor="let concept of lesson.coreConcepts">{{ concept }}</li>
-        </ul>
-      </article>
-
-      <article class="lesson__card">
-        <h2>项目实践</h2>
-        <div class="lesson__practice" *ngFor="let practice of lesson.projectPractices">
-          <h3>{{ practice.title }}</h3>
-          <p>{{ practice.description }}</p>
-          <ul>
-            <li *ngFor="let deliverable of practice.deliverables">{{ deliverable }}</li>
+    <main class="lesson-layout">
+      <section class="lesson-content">
+        <article class="lesson-card">
+          <h2>核心知识点</h2>
+          <ul class="lesson-list">
+            <li *ngFor="let concept of lesson.coreConcepts">{{ concept }}</li>
           </ul>
+        </article>
+
+        <article class="lesson-card">
+          <h2>项目实践</h2>
+          <div class="lesson-project" *ngFor="let practice of lesson.projectPractices">
+            <header>
+              <h3>{{ practice.title }}</h3>
+              <p>{{ practice.description }}</p>
+            </header>
+            <ul>
+              <li *ngFor="let deliverable of practice.deliverables">{{ deliverable }}</li>
+            </ul>
+          </div>
+        </article>
+
+        <div class="lesson-grid">
+          <article class="lesson-card">
+            <h2>预期产出</h2>
+            <ul class="lesson-list lesson-list--with-title">
+              <li *ngFor="let outcome of lesson.outcomes">
+                <strong>{{ outcome.title }}：</strong>
+                <span>{{ outcome.details }}</span>
+              </li>
+            </ul>
+          </article>
+
+          <article class="lesson-card">
+            <h2>拓展资源</h2>
+            <ul class="lesson-resources">
+              <li *ngFor="let resource of lesson.resources">
+                <a [href]="resource.url" target="_blank" rel="noreferrer">{{ resource.label }}</a>
+              </li>
+            </ul>
+            <div class="lesson-tips">
+              <h3>实践建议</h3>
+              <p>结合官方示例与项目仓库，记录遇到的问题与解决策略，形成个人知识库。</p>
+            </div>
+          </article>
         </div>
-      </article>
-    </section>
+      </section>
 
-    <section class="lesson__content lesson__content--secondary">
-      <article class="lesson__card">
-        <h2>预期产出</h2>
-        <ul>
-          <li *ngFor="let outcome of lesson.outcomes">
-            <strong>{{ outcome.title }}：</strong>
-            <span>{{ outcome.details }}</span>
-          </li>
-        </ul>
-      </article>
-
-      <article class="lesson__card">
-        <h2>拓展资源</h2>
-        <ul class="lesson__resources">
-          <li *ngFor="let resource of lesson.resources">
-            <a [href]="resource.url" target="_blank" rel="noreferrer">{{ resource.label }}</a>
-          </li>
-        </ul>
-        <div class="lesson__tips">
-          <h3>实践建议</h3>
-          <p>结合官方示例与项目仓库，记录遇到的问题与解决策略，形成个人知识库。</p>
+      <aside class="lesson-sidebar">
+        <div class="lesson-sidebar__card">
+          <h2>课程目录</h2>
+          <div class="lesson-directory" *ngFor="let group of groupedLessons(); trackBy: trackByGroupId">
+            <h3>{{ group.section.name }}</h3>
+            <ul>
+              <li *ngFor="let item of group.lessons; trackBy: trackByLessonId">
+                <button type="button" [class.is-active]="item.id === lesson.id" (click)="navigateTo(item)">
+                  <span class="lesson-directory__order">S{{ item.order | number: '2.0-0' }}</span>
+                  <span class="lesson-directory__title">{{ item.title }}</span>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-      </article>
-    </section>
 
-    <footer class="lesson__footer">
-      <div class="lesson__nav">
-        <button type="button" class="lesson__nav-btn" [disabled]="!previousLesson()" (click)="navigateTo(previousLesson())">
-          上一课
-        </button>
-        <button type="button" class="lesson__nav-btn" [disabled]="!nextLesson()" (click)="navigateTo(nextLesson())">
-          下一课
-        </button>
-      </div>
-      <a class="lesson__back" routerLink="/">返回学习路径</a>
-    </footer>
+        <div class="lesson-sidebar__card lesson-sidebar__card--actions">
+          <h2>快速导航</h2>
+          <button type="button" class="sidebar-nav" [disabled]="!previousLesson()" (click)="navigateTo(previousLesson())">
+            上一课
+          </button>
+          <button type="button" class="sidebar-nav" [disabled]="!nextLesson()" (click)="navigateTo(nextLesson())">
+            下一课
+          </button>
+          <a routerLink="/" class="sidebar-nav sidebar-nav--link">返回学习路径</a>
+        </div>
+      </aside>
+    </main>
   </div>
 </ng-container>
 
 <ng-template #missingLesson>
-  <div class="lesson lesson--empty">
+  <div class="lesson-empty">
     <h1>未找到该课程</h1>
     <p>课程链接可能已过期或被调整，请回到首页重新选择。</p>
     <a routerLink="/">回到首页</a>
