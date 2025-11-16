@@ -1,0 +1,59 @@
+.playground {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.playground-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.playground button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: #22d3ee;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.playground-body ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.playground-body li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+}
+
+.playground form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.playground input {
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+}
+
+@media (max-width: 960px) {
+  .playground {
+    order: -1;
+  }
+}
