@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { learningStages } from '@/types/learningStages'
 import { LearningStageCard } from '@/components/LearningStageCard'
 import { ThemeToggle } from '@/components/ThemeToggle'
@@ -18,7 +19,15 @@ export function HomePage() {
                 16 个课时覆盖基础知识与项目实战，系统掌握现代 JavaScript 能力
               </p>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <Link
+                to="/dyson-sphere"
+                className="hidden sm:inline-flex rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-primary-700"
+              >
+                进入戴森球展示
+              </Link>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>

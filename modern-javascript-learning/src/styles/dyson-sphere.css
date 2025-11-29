@@ -1,0 +1,131 @@
+@keyframes dyson-rotate {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+  100% {
+    transform: rotate(360deg) translateX(0);
+  }
+}
+
+@keyframes dyson-pulse {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+}
+
+@keyframes dyson-starfield {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-200px);
+  }
+}
+
+.dyson-stars {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.07) 0, transparent 25%),
+    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.06) 0, transparent 20%),
+    radial-gradient(circle at 50% 70%, rgba(255, 255, 255, 0.05) 0, transparent 22%),
+    radial-gradient(circle at 30% 80%, rgba(56, 189, 248, 0.08) 0, transparent 18%);
+  background-color: #050b15;
+  filter: blur(0px);
+  animation: dyson-starfield 18s linear infinite alternate;
+  opacity: 0.65;
+}
+
+.dyson-grid {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.12) 0, rgba(5, 11, 21, 0.3) 60%, transparent 70%),
+    radial-gradient(circle at 35% 40%, rgba(56, 189, 248, 0.1) 0, transparent 45%),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: cover, cover, 120px 120px, 120px 120px;
+  mask-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9), transparent 70%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.dyson-sphere {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.2));
+}
+
+.dyson-core {
+  position: absolute;
+  width: 34%;
+  height: 34%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff7e6, #ffd166 40%, #f97316 70%, transparent 72%);
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.6), 0 0 60px rgba(250, 204, 21, 0.4);
+  animation: dyson-pulse 4s ease-in-out infinite;
+}
+
+.dyson-shell {
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  border: 1px solid rgba(125, 249, 255, 0.4);
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.4), inset 0 0 40px rgba(165, 243, 252, 0.15);
+  background: conic-gradient(from 45deg, rgba(56, 189, 248, 0.28), rgba(14, 165, 233, 0.1), rgba(56, 189, 248, 0.28));
+  animation: dyson-rotate 24s linear infinite;
+}
+
+.dyson-orbit {
+  position: absolute;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  inset: 0;
+  animation: dyson-rotate 18s linear infinite;
+}
+
+.dyson-orbit--1 {
+  transform: scale(1.1);
+  animation-duration: 20s;
+}
+
+.dyson-orbit--2 {
+  transform: scale(1.25);
+  animation-duration: 26s;
+}
+
+.dyson-orbit--3 {
+  transform: scale(1.4);
+  animation-duration: 32s;
+}
+
+.dyson-beam {
+  position: absolute;
+  width: 8%;
+  height: 130%;
+  background: linear-gradient(180deg, transparent, rgba(125, 249, 255, 0.7), transparent);
+  filter: blur(2px);
+  animation: dyson-rotate 14s linear infinite;
+}
+
+.dyson-beam--left {
+  transform-origin: bottom center;
+  transform: rotate(35deg);
+}
+
+.dyson-beam--right {
+  transform-origin: bottom center;
+  transform: rotate(-35deg);
+}

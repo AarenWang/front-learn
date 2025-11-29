@@ -16,6 +16,8 @@ pnpm install
 pnpm dev
 ```
 
+> 若启动时报错 “The package "@esbuild/<platform>" could not be found”，通常是可选的 esbuild 二进制未被拉取。请删除 `node_modules` 后执行 `pnpm install --force`，并允许 pnpm 运行 esbuild 的构建脚本，完成后再重试 `pnpm dev`。
+
 ### 构建项目
 
 ```bash
