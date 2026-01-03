@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dyson Sphere Canvas Sketch</title>
+  <title>Dyson Sphere Canvas Twin</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #05060d;
-      --fg: #dfe8ff;
-      --accent: #1db6ff;
-      --accent-2: #ffda5a;
-      --soft: #6fd6ff44;
-      --panel: #82f3ff22;
-      --panel-2: #ffd54f22;
+      --panel: #0b0d17;
+      --border: #1e2640;
+      --glow: #3ea6ff;
+      --bg: radial-gradient(circle at 30% 30%, #0a1226, #060712 55%, #02030a);
     }
 
     * { box-sizing: border-box; }
@@ -21,298 +18,374 @@
     body {
       margin: 0;
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at 30% 30%, #0a1226, #060712 55%, #02030a);
-      color: var(--fg);
-      display: grid;
-      place-items: center;
+      background: var(--bg);
+      color: #dfe8ff;
       min-height: 100vh;
-      padding: 24px;
-      gap: 24px;
-    }
-
-    .panel {
-      width: min(1200px, 100%);
-      background: #0a0d1a;
-      border: 1px solid #1e2640;
-      border-radius: 18px;
-      box-shadow: 0 20px 80px #000a;
-      overflow: hidden;
-    }
-
-    header {
-      padding: 16px 18px;
+      padding: 28px;
       display: flex;
+      flex-direction: column;
+      gap: 22px;
       align-items: center;
+    }
+
+    header.page {
+      width: min(1280px, 100%);
+      display: flex;
       justify-content: space-between;
-      background: linear-gradient(120deg, #0f1a2e, #0a0d1a 50%, #0c1222);
-      border-bottom: 1px solid #1e2640;
+      align-items: baseline;
+      gap: 12px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
+    header h1 { margin: 0; font-size: 22px; letter-spacing: 0.3px; }
+    header p { margin: 0; color: #9db0d8; font-size: 14px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 20px;
+      width: min(1280px, 100%);
     }
 
-    .controls {
+    .card {
+      background: linear-gradient(160deg, #0f1a2e, #0a0d1a 40%, #0c1224);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px #000a;
       display: flex;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
     }
 
-    button {
-      background: #11233f;
-      color: var(--fg);
-      border: 1px solid #2b3d60;
-      border-radius: 12px;
-      padding: 8px 14px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      cursor: pointer;
-      transition: all 160ms ease;
+    .card header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border);
     }
 
-    button:hover { border-color: #3ea6ff; box-shadow: 0 0 0 1px #3ea6ff44 inset, 0 10px 30px #0008; }
-    button:active { transform: translateY(1px) scale(0.99); }
+    .card h2 { margin: 0; font-size: 18px; }
+    .card small { color: #9db0d8; }
 
     canvas {
       display: block;
       width: 100%;
-      height: clamp(420px, 70vh, 820px);
+      height: clamp(420px, 62vh, 720px);
       background: radial-gradient(ellipse at 50% 50%, #040816, #01030c 70%, #000);
     }
 
-    footer {
-      padding: 14px 18px;
-      border-top: 1px solid #1e2640;
-      background: #0b0e19;
+    .caption {
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--border);
       font-size: 13px;
-      letter-spacing: 0.1px;
-      color: #a9b7d9;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      color: #9fb2d8;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <div class="panel">
-    <header>
-      <h1>Dyson Sphere — Canvas Study</h1>
-      <div class="controls">
-        <button id="schemeA">方案 A · 蓝金</button>
-        <button id="schemeB">方案 B · 紫青</button>
-      </div>
-    </header>
-    <canvas id="scene" width="1200" height="720" aria-label="Dyson Sphere canvas"></canvas>
-    <footer>
-      <span>灵感来源：戴森球概念图，用 Canvas 重新绘制光泽、面板和卫星。</span>
-      <span id="hint">点击按钮切换配色方案。</span>
-    </footer>
+  <header class="page">
+    <h1>Dyson Sphere — 双画布重现</h1>
+    <p>两张参考图分别对应两个 canvas，强化贴图、光晕、环带与蜂巢面板细节。</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <header>
+        <h2>场景 A · 蓝金高亮</h2>
+        <small>冷色背景，金色能量矩阵与密集蜂巢条纹。</small>
+      </header>
+      <canvas id="sphereA" width="1200" height="720" aria-label="Dyson Sphere A"></canvas>
+      <div class="caption">高亮的能量补丁、冷蓝星空、椭圆轨道与大量卫星，再现第一张参考图的发光质感。</div>
+    </div>
+
+    <div class="card">
+      <header>
+        <h2>场景 B · 紫青晶格</h2>
+        <small>深紫背景，青色环带，粉紫晶格辉光。</small>
+      </header>
+      <canvas id="sphereB" width="1200" height="720" aria-label="Dyson Sphere B"></canvas>
+      <div class="caption">偏紫色的星空，亮粉色面板光泽，倾斜的双环和更稀疏的卫星布置，贴近第二张参考图。</div>
+    </div>
   </div>
 
   <script>
-    const canvas = document.getElementById('scene');
-    const ctx = canvas.getContext('2d');
-    let viewWidth = 0;
-    let viewHeight = 0;
-    let dpr = 1;
+    function createRenderer(canvas, config) {
+      const ctx = canvas.getContext('2d');
+      let viewWidth = 0;
+      let viewHeight = 0;
+      let dpr = 1;
+      let tick = 0;
+      const stars = Array.from({ length: config.stars.count }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: Math.random() * config.stars.radiusRange + 0.4,
+        a: Math.random() * Math.PI * 2,
+        twinkle: Math.random() * 0.5 + 0.5,
+      }));
 
-    const schemes = {
-      A: {
-        glow: '#2de3ff',
-        glow2: '#ffd45b',
-        surface: ['#0e4b8f', '#0c1c3f'],
-        lattice: '#1ec7ff55',
-        lattice2: '#ffd45b55',
-        halo: '#1d6bff',
-        satellites: '#8fe6ff',
-      },
-      B: {
-        glow: '#5af5ff',
-        glow2: '#ff7cf3',
-        surface: ['#12325c', '#0c182d'],
-        lattice: '#63ffe655',
-        lattice2: '#ff7cf355',
-        halo: '#5ec7ff',
-        satellites: '#c7f3ff',
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        dpr = window.devicePixelRatio || 1;
+        viewWidth = rect.width;
+        viewHeight = rect.height;
+        canvas.width = viewWidth * dpr;
+        canvas.height = viewHeight * dpr;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
       }
-    };
+      resize();
+      window.addEventListener('resize', resize);
 
-    let current = 'A';
-    let tick = 0;
-    const stars = Array.from({ length: 240 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      r: Math.random() * 1.2 + 0.2,
-      a: Math.random() * Math.PI * 2,
-      twinkle: Math.random() * 0.5 + 0.5,
-    }));
-
-    function resize() {
-      const rect = canvas.getBoundingClientRect();
-      dpr = window.devicePixelRatio || 1;
-      viewWidth = rect.width;
-      viewHeight = rect.height;
-      canvas.width = viewWidth * dpr;
-      canvas.height = viewHeight * dpr;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    function drawStarfield() {
-      const width = viewWidth;
-      const height = viewHeight;
-      ctx.save();
-      ctx.fillStyle = '#01040c';
-      ctx.fillRect(0, 0, width, height);
-      stars.forEach((s, i) => {
-        const alpha = 0.3 + Math.sin(tick * 0.02 + s.a) * 0.2;
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha * s.twinkle})`;
-        const x = s.x * width;
-        const y = s.y * height;
-        ctx.beginPath();
-        ctx.arc(x, y, s.r, 0, Math.PI * 2);
-        ctx.fill();
-        if (i % 17 === 0) {
-          ctx.strokeStyle = `rgba(110, 180, 255, ${alpha * 0.5})`;
-          ctx.beginPath();
-          ctx.arc(x, y, s.r * 3, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-      });
-      ctx.restore();
-    }
-
-    function drawSphere({ glow, glow2, surface, lattice, lattice2, halo, satellites }) {
-      const w = viewWidth;
-      const h = viewHeight;
-      const cx = w / 2;
-      const cy = h / 2;
-      const radius = Math.min(w, h) * 0.28;
-
-      ctx.save();
-      ctx.translate(cx, cy);
-
-      // halo
-      const haloGrad = ctx.createRadialGradient(0, 0, radius * 0.9, 0, 0, radius * 1.45);
-      haloGrad.addColorStop(0, `${halo}55`);
-      haloGrad.addColorStop(1, '#0000');
-      ctx.fillStyle = haloGrad;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius * 1.45, 0, Math.PI * 2);
-      ctx.fill();
-
-      // body
-      const bodyGrad = ctx.createRadialGradient(-radius * 0.2, -radius * 0.2, radius * 0.1, 0, 0, radius * 1.1);
-      bodyGrad.addColorStop(0, surface[0]);
-      bodyGrad.addColorStop(1, surface[1]);
-      ctx.fillStyle = bodyGrad;
-      ctx.shadowColor = `${glow}55`;
-      ctx.shadowBlur = 30;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI * 2);
-      ctx.fill();
-
-      // patch (the yellow luminous matrix)
-      const patchRadius = radius * 0.48;
-      const patchGrad = ctx.createRadialGradient(radius * 0.25, -radius * 0.15, patchRadius * 0.1, radius * 0.25, -radius * 0.15, patchRadius * 1.1);
-      patchGrad.addColorStop(0, `${glow2}`);
-      patchGrad.addColorStop(1, `${glow2}00`);
-      ctx.fillStyle = patchGrad;
-      ctx.beginPath();
-      ctx.arc(radius * 0.25, -radius * 0.15, patchRadius, 0, Math.PI * 2);
-      ctx.fill();
-
-      // hexagonal panel hints
-      const panelCount = 90;
-      ctx.lineWidth = 1.2;
-      for (let i = 0; i < panelCount; i++) {
-        const a = (i / panelCount) * Math.PI * 2 + tick * 0.002;
-        const dist = radius * 0.4 + Math.sin(i * 0.6 + tick * 0.01) * 6;
-        const size = 10 + Math.sin(i + tick * 0.03) * 4;
-        const x = Math.cos(a) * dist;
-        const y = Math.sin(a) * dist * 0.75;
-        ctx.strokeStyle = i % 3 === 0 ? lattice2 : lattice;
-        ctx.beginPath();
-        for (let j = 0; j < 6; j++) {
-          const ang = a + j * Math.PI / 3;
-          const px = x + Math.cos(ang) * size;
-          const py = y + Math.sin(ang) * size * 0.75;
-          if (j === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.closePath();
-        ctx.stroke();
-      }
-
-      // banding / orbital rings
-      const ringCount = 6;
-      for (let i = 0; i < ringCount; i++) {
-        const rot = (i / ringCount) * Math.PI * 2 + tick * 0.005;
+      function drawStarfield() {
         ctx.save();
-        ctx.rotate(rot);
-        ctx.strokeStyle = `${glow}66`;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, radius * 1.05, radius * 0.45 + i * 4, 0, 0, Math.PI * 2);
-        ctx.stroke();
+        ctx.fillStyle = config.background.fill;
+        ctx.fillRect(0, 0, viewWidth, viewHeight);
+        stars.forEach((s, i) => {
+          const alpha = 0.35 + Math.sin(tick * 0.02 + s.a) * 0.2;
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha * s.twinkle * config.stars.opacity})`;
+          const x = s.x * viewWidth;
+          const y = s.y * viewHeight;
+          ctx.beginPath();
+          ctx.arc(x, y, s.r, 0, Math.PI * 2);
+          ctx.fill();
+          if (i % config.stars.ringEvery === 0) {
+            ctx.strokeStyle = `${config.stars.ringTint}${Math.floor(alpha * 80).toString(16).padStart(2, '0')}`;
+            ctx.beginPath();
+            ctx.arc(x, y, s.r * 3, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        });
         ctx.restore();
       }
 
-      // satellites / thrusters
-      const satCount = 22;
-      for (let i = 0; i < satCount; i++) {
-        const a = (i / satCount) * Math.PI * 2 + tick * 0.01;
-        const r = radius * 1.05 + Math.sin(tick * 0.02 + i) * 6;
-        const x = Math.cos(a) * r;
-        const y = Math.sin(a) * r * 0.72;
-        ctx.fillStyle = `${satellites}`;
+      function drawSphere() {
+        const w = viewWidth;
+        const h = viewHeight;
+        const cx = w / 2 + config.centerShift.x * w;
+        const cy = h / 2 + config.centerShift.y * h;
+        const radius = Math.min(w, h) * config.radiusScale;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        // halo
+        const haloGrad = ctx.createRadialGradient(0, 0, radius * config.halo.inner, 0, 0, radius * config.halo.outer);
+        haloGrad.addColorStop(0, `${config.halo.color}${config.halo.alphaInner}`);
+        haloGrad.addColorStop(1, '#0000');
+        ctx.fillStyle = haloGrad;
         ctx.beginPath();
-        ctx.arc(x, y, 4 + (i % 3 === 0 ? 2 : 0), 0, Math.PI * 2);
+        ctx.arc(0, 0, radius * config.halo.outer, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = `${glow}44`;
+
+        // body
+        const bodyGrad = ctx.createRadialGradient(config.body.light.x * radius, config.body.light.y * radius, radius * 0.1, 0, 0, radius * 1.1);
+        config.body.colors.forEach(([stop, color]) => bodyGrad.addColorStop(stop, color));
+        ctx.fillStyle = bodyGrad;
+        ctx.shadowColor = `${config.glow.base}${config.glow.shadow}`;
+        ctx.shadowBlur = config.glow.blur;
         ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x * 1.08, y * 1.05);
-        ctx.stroke();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // luminous patch / window
+        if (config.patch) {
+          const patchRadius = radius * config.patch.scale;
+          const patchGrad = ctx.createRadialGradient(radius * config.patch.offset.x, radius * config.patch.offset.y, patchRadius * 0.1, radius * config.patch.offset.x, radius * config.patch.offset.y, patchRadius * 1.1);
+          patchGrad.addColorStop(0, config.patch.color);
+          patchGrad.addColorStop(1, `${config.patch.color}00`);
+          ctx.fillStyle = patchGrad;
+          ctx.beginPath();
+          ctx.arc(radius * config.patch.offset.x, radius * config.patch.offset.y, patchRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // panel lattice
+        const panelCount = config.lattice.count;
+        ctx.lineWidth = config.lattice.width;
+        for (let i = 0; i < panelCount; i++) {
+          const a = (i / panelCount) * Math.PI * 2 + tick * config.lattice.spin;
+          const dist = radius * config.lattice.dist + Math.sin(i * config.lattice.waveFreq + tick * config.lattice.waveSpeed) * config.lattice.waveAmp;
+          const size = config.lattice.size + Math.sin(i + tick * config.lattice.sizePulse) * config.lattice.sizeAmp;
+          const x = Math.cos(a) * dist;
+          const y = Math.sin(a) * dist * config.lattice.flatten;
+          ctx.strokeStyle = i % config.lattice.altEvery === 0 ? config.lattice.altColor : config.lattice.color;
+          ctx.beginPath();
+          for (let j = 0; j < 6; j++) {
+            const ang = a + j * Math.PI / 3;
+            const px = x + Math.cos(ang) * size;
+            const py = y + Math.sin(ang) * size * 0.72;
+            if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+
+        // banding / orbital rings
+        config.rings.forEach((ring, idx) => {
+          const rot = ring.base + tick * ring.spin;
+          ctx.save();
+          ctx.rotate(rot);
+          ctx.strokeStyle = `${ring.color}${ring.alpha}`;
+          ctx.lineWidth = ring.width;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, radius * ring.rx, radius * ring.ry, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          if (ring.glint) {
+            ctx.strokeStyle = `${ring.glint.color}${ring.glint.alpha}`;
+            ctx.lineWidth = ring.width * 0.5;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, radius * ring.rx * 0.94, radius * ring.ry * 0.94, 0, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.restore();
+        });
+
+        // satellites / thrusters
+        const satCount = config.satellites.count;
+        for (let i = 0; i < satCount; i++) {
+          const a = (i / satCount) * Math.PI * 2 + tick * config.satellites.spin;
+          const r = radius * config.satellites.radius + Math.sin(tick * config.satellites.breathe + i * 0.6) * config.satellites.wobble;
+          const x = Math.cos(a) * r;
+          const y = Math.sin(a) * r * config.satellites.flatten;
+          const size = config.satellites.baseSize + (i % config.satellites.brightEvery === 0 ? config.satellites.brightBoost : 0);
+          ctx.fillStyle = config.satellites.color;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = `${config.glow.base}${config.satellites.trailAlpha}`;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x * 1.08, y * 1.04);
+          ctx.stroke();
+        }
+
+        // highlight gloss
+        const glossGrad = ctx.createRadialGradient(-radius * config.gloss.offset, -radius * config.gloss.offset, 10, 0, 0, radius * config.gloss.size);
+        glossGrad.addColorStop(0, `${config.glow.base}${config.gloss.alpha}`);
+        glossGrad.addColorStop(1, '#ffffff00');
+        ctx.fillStyle = glossGrad;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
       }
 
-      // highlight gloss
-      const glossGrad = ctx.createRadialGradient(-radius * 0.5, -radius * 0.5, 10, 0, 0, radius * 1.1);
-      glossGrad.addColorStop(0, `${glow}aa`);
-      glossGrad.addColorStop(1, '#ffffff00');
-      ctx.fillStyle = glossGrad;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI * 2);
-      ctx.fill();
+      function draw() {
+        drawStarfield();
+        drawSphere();
+        tick += 1;
+        requestAnimationFrame(draw);
+      }
 
-      ctx.restore();
+      draw();
     }
 
-    function draw() {
-      const colors = schemes[current];
-      drawStarfield();
-      drawSphere(colors);
-      tick += 1;
-      requestAnimationFrame(draw);
-    }
+    const configA = {
+      background: { fill: '#020712' },
+      stars: { count: 260, radiusRange: 1.2, ringEvery: 14, ringTint: '#6eb4ff', opacity: 0.9 },
+      centerShift: { x: -0.02, y: -0.02 },
+      radiusScale: 0.3,
+      halo: { color: '#1d6bff', inner: 0.9, outer: 1.5, alphaInner: '66' },
+      glow: { base: '#2de3ff', shadow: '55', blur: 32 },
+      body: {
+        light: { x: -0.15, y: -0.15 },
+        colors: [
+          [0, '#0e4b8f'],
+          [0.7, '#0c1c3f'],
+          [1, '#040916']
+        ]
+      },
+      patch: { color: '#ffd45b', scale: 0.45, offset: { x: 0.3, y: -0.12 } },
+      lattice: {
+        count: 110,
+        width: 1.2,
+        dist: 0.4,
+        waveFreq: 0.65,
+        waveSpeed: 0.012,
+        waveAmp: 8,
+        size: 11,
+        sizeAmp: 4,
+        sizePulse: 0.03,
+        flatten: 0.76,
+        spin: 0.002,
+        altEvery: 3,
+        color: '#1ec7ff55',
+        altColor: '#ffd45b55'
+      },
+      rings: [
+        { base: 0, spin: 0.004, rx: 1.05, ry: 0.48, width: 2.2, color: '#2de3ff', alpha: '66', glint: { color: '#ffd45b', alpha: '55' } },
+        { base: Math.PI / 3, spin: 0.002, rx: 1.12, ry: 0.36, width: 1.5, color: '#2de3ff', alpha: '44' },
+        { base: -Math.PI / 4, spin: -0.003, rx: 0.94, ry: 0.6, width: 1.8, color: '#ffd45b', alpha: '66' }
+      ],
+      satellites: {
+        count: 28,
+        spin: 0.011,
+        radius: 1.12,
+        wobble: 8,
+        breathe: 0.02,
+        flatten: 0.74,
+        baseSize: 3.3,
+        brightEvery: 4,
+        brightBoost: 1.8,
+        color: '#8fe6ff',
+        trailAlpha: '44'
+      },
+      gloss: { offset: 0.52, size: 1.1, alpha: 'aa' }
+    };
 
-    document.getElementById('schemeA').addEventListener('click', () => {
-      current = 'A';
-      document.getElementById('hint').textContent = '方案 A：蓝色背景 + 金色能量矩阵';
-    });
-    document.getElementById('schemeB').addEventListener('click', () => {
-      current = 'B';
-      document.getElementById('hint').textContent = '方案 B：紫青星云 + 粉色面板高光';
-    });
+    const configB = {
+      background: { fill: '#0a0620' },
+      stars: { count: 220, radiusRange: 1.1, ringEvery: 18, ringTint: '#a4c6ff', opacity: 0.7 },
+      centerShift: { x: 0.02, y: 0 },
+      radiusScale: 0.3,
+      halo: { color: '#5ec7ff', inner: 0.85, outer: 1.55, alphaInner: '55' },
+      glow: { base: '#ff7cf3', shadow: '66', blur: 38 },
+      body: {
+        light: { x: -0.2, y: -0.2 },
+        colors: [
+          [0, '#12325c'],
+          [0.65, '#0c182d'],
+          [1, '#050814']
+        ]
+      },
+      patch: { color: '#ff9bff', scale: 0.52, offset: { x: -0.05, y: -0.08 } },
+      lattice: {
+        count: 95,
+        width: 1.3,
+        dist: 0.42,
+        waveFreq: 0.55,
+        waveSpeed: 0.009,
+        waveAmp: 7,
+        size: 12,
+        sizeAmp: 5,
+        sizePulse: 0.025,
+        flatten: 0.78,
+        spin: 0.003,
+        altEvery: 4,
+        color: '#63ffe655',
+        altColor: '#ff7cf355'
+      },
+      rings: [
+        { base: Math.PI / 8, spin: 0.0035, rx: 1.1, ry: 0.52, width: 2.4, color: '#5ef3ff', alpha: '77', glint: { color: '#b7f3ff', alpha: '66' } },
+        { base: -Math.PI / 3, spin: -0.0025, rx: 0.92, ry: 0.66, width: 1.7, color: '#ff7cf3', alpha: '66' }
+      ],
+      satellites: {
+        count: 18,
+        spin: 0.009,
+        radius: 1.08,
+        wobble: 6,
+        breathe: 0.018,
+        flatten: 0.78,
+        baseSize: 3.6,
+        brightEvery: 3,
+        brightBoost: 1.4,
+        color: '#c7f3ff',
+        trailAlpha: '33'
+      },
+      gloss: { offset: 0.45, size: 1.05, alpha: 'aa' }
+    };
 
-    draw();
+    createRenderer(document.getElementById('sphereA'), configA);
+    createRenderer(document.getElementById('sphereB'), configB);
   </script>
 </body>
 </html>
