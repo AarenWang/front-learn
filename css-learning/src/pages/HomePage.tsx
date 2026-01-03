@@ -96,6 +96,11 @@ export function HomePage() {
                   打开 CSS Playground
                 </Button>
               </Link>
+              <Link to="/tailwind-learning" className="sm:w-auto">
+                <Button variant="secondary" className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white border-0">
+                  Tailwind 实践教程
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

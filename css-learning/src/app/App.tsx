@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { HomePage } from '@/pages/HomePage'
 import { LessonPage } from '@/pages/LessonPage'
 import { PlaygroundPage } from '@/pages/PlaygroundPage'
+import { TailwindLearningPage } from '@/pages/TailwindLearningPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/lessons/:lessonSlug" element={<LessonPage />} />
         <Route path="/playground" element={<PlaygroundPage />} />
+        <Route path="/tailwind-learning" element={<TailwindLearningPage />} />
         <Route path="/404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
