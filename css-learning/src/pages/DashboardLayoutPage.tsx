@@ -1,15 +1,22 @@
 import { useState } from 'react'
 
+type MenuItem = {
+  icon: string
+  label: string
+  id: string
+}
+
 export function DashboardLayoutPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [activeMenu, setActiveMenu] = useState('dashboard')
 
-  const sidebarItems = [
-    { icon: '🏠', label: '仪表盘', active: true },
-    { icon: '📊', label: '数据分析', active: false },
-    { icon: '👥', label: '用户管理', active: false },
-    { icon: '📦', label: '产品管理', active: false },
-    { icon: '💰', label: '订单管理', active: false },
-    { icon: '⚙️', label: '系统设置', active: false },
+  const sidebarItems: MenuItem[] = [
+    { icon: '🏠', label: '仪表盘', id: 'dashboard' },
+    { icon: '📊', label: '数据分析', id: 'analytics' },
+    { icon: '👥', label: '用户管理', id: 'users' },
+    { icon: '📦', label: '产品管理', id: 'products' },
+    { icon: '💰', label: '订单管理', id: 'orders' },
+    { icon: '⚙️', label: '系统设置', id: 'settings' },
   ]
 
   const stats = [
@@ -58,19 +65,25 @@ export function DashboardLayoutPage() {
 
           {/* 导航菜单 */}
           <nav className="flex-1 space-y-2 px-3 py-4">
-            {sidebarItems.map((item, index) => (
-              <a
-                key={index}
-                href="#"
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
-                  item.active
+            {sidebarItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveMenu(item.id)
+                  // 在移动端点击菜单后自动关闭侧边栏
+                  if (window.innerWidth < 1024) {
+                    setSidebarOpen(false)
+                  }
+                }}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
+                  activeMenu === item.id
                     ? 'bg-gray-800 text-white'
                     : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                 }`}
               >
                 <span className="text-xl">{item.icon}</span>
                 <span className="font-medium">{item.label}</span>
-              </a>
+              </button>
             ))}
           </nav>
 
@@ -129,132 +142,241 @@ export function DashboardLayoutPage() {
 
         {/* 内容区 */}
         <main className="p-4 lg:p-8">
-          {/* 页面标题 */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
-              仪表盘概览
-            </h1>
-            <p className="mt-2 text-gray-600">欢迎回来！这是您的数据概览</p>
-          </div>
-
-          {/* 统计卡片 */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="overflow-hidden rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5 transition-shadow hover:shadow-md"
-              >
-                <div className="flex items-center justify-between">
-                  <div className={`h-12 w-12 rounded-lg ${stat.color} bg-opacity-10`}>
-                    <div className={`flex h-full items-center justify-center text-2xl`}>
-                      {stat.label.includes('用户') && '👥'}
-                      {stat.label.includes('收入') && '💰'}
-                      {stat.label.includes('订单') && '📦'}
-                    </div>
-                  </div>
-                  <span
-                    className={`text-sm font-medium ${
-                      stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                    }`}
-                  >
-                    {stat.change}
-                  </span>
-                </div>
-                <div className="mt-4">
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                  <p className="mt-1 text-sm text-gray-600">{stat.label}</p>
-                </div>
+          {/* 根据激活的菜单显示不同内容 */}
+          {activeMenu === 'dashboard' && (
+            <>
+              {/* 页面标题 */}
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
+                  仪表盘概览
+                </h1>
+                <p className="mt-2 text-gray-600">欢迎回来！这是您的数据概览</p>
               </div>
-            ))}
-          </div>
 
-          {/* 图表和活动列表 */}
-          <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            {/* 图表 */}
-            <div className="lg:col-span-2">
-              <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
-                <h2 className="text-lg font-semibold text-gray-900">周数据趋势</h2>
-                <p className="mt-1 text-sm text-gray-600">过去7天的数据统计</p>
-
-                <div className="mt-6 flex items-end justify-between gap-2 h-64">
-                  {chartData.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-1 flex-col items-center gap-2 group"
-                    >
-                      <div className="relative w-full flex items-end justify-center h-48 bg-gray-50 rounded-t-lg">
-                        <div
-                          className="w-full max-w-[40px] bg-blue-500 rounded-t-lg transition-all duration-300 group-hover:bg-blue-600"
-                          style={{ height: `${item.value}%` }}
-                        >
-                          <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded transition-opacity">
-                            {item.value}
-                          </div>
+              {/* 统计卡片 */}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="overflow-hidden rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5 transition-shadow hover:shadow-md"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className={`h-12 w-12 rounded-lg ${stat.color} bg-opacity-10`}>
+                        <div className={`flex h-full items-center justify-center text-2xl`}>
+                          {stat.label.includes('用户') && '👥'}
+                          {stat.label.includes('收入') && '💰'}
+                          {stat.label.includes('订单') && '📦'}
                         </div>
                       </div>
-                      <span className="text-xs text-gray-600">{item.label}</span>
+                      <span
+                        className={`text-sm font-medium ${
+                          stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                        }`}
+                      >
+                        {stat.change}
+                      </span>
                     </div>
-                  ))}
+                    <div className="mt-4">
+                      <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                      <p className="mt-1 text-sm text-gray-600">{stat.label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {activeMenu === 'analytics' && (
+            <>
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
+                  数据分析
+                </h1>
+                <p className="mt-2 text-gray-600">查看详细的业务数据分析</p>
+              </div>
+              <div className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-900/5">
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="text-6xl mb-4">📊</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">数据分析模块</h3>
+                  <p className="text-gray-600 text-center max-w-md">
+                    这里将显示详细的数据分析图表，包括销售趋势、用户增长、转化率等关键指标。
+                  </p>
                 </div>
               </div>
-            </div>
+            </>
+          )}
 
-            {/* 最近活动 */}
-            <div>
-              <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
-                <h2 className="text-lg font-semibold text-gray-900">最近活动</h2>
-                <p className="mt-1 text-sm text-gray-600">最新的用户操作</p>
+          {activeMenu === 'users' && (
+            <>
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
+                  用户管理
+                </h1>
+                <p className="mt-2 text-gray-600">管理系统用户和权限</p>
+              </div>
+              <div className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-900/5">
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="text-6xl mb-4">👥</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">用户管理模块</h3>
+                  <p className="text-gray-600 text-center max-w-md">
+                    这里将显示用户列表，支持添加、编辑、删除用户，以及角色权限管理等功能。
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
 
-                <div className="mt-6 space-y-4">
-                  {recentActivities.map((activity, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-lg">
-                        {activity.avatar}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900">
-                          {activity.user}
-                        </p>
-                        <p className="text-xs text-gray-600 truncate">
-                          {activity.action}
-                        </p>
-                        <p className="mt-1 text-xs text-gray-400">
-                          {activity.time}
-                        </p>
-                      </div>
+          {activeMenu === 'products' && (
+            <>
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
+                  产品管理
+                </h1>
+                <p className="mt-2 text-gray-600">管理产品和库存</p>
+              </div>
+              <div className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-900/5">
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="text-6xl mb-4">📦</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">产品管理模块</h3>
+                  <p className="text-gray-600 text-center max-w-md">
+                    这里将显示产品列表，支持产品的新增、编辑、下架，以及库存管理等功能。
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeMenu === 'orders' && (
+            <>
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
+                  订单管理
+                </h1>
+                <p className="mt-2 text-gray-600">处理和跟踪订单</p>
+              </div>
+              <div className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-900/5">
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="text-6xl mb-4">💰</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">订单管理模块</h3>
+                  <p className="text-gray-600 text-center max-w-md">
+                    这里将显示订单列表，支持订单查询、状态更新、发货处理等功能。
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeMenu === 'settings' && (
+            <>
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 lg:text-3xl">
+                  系统设置
+                </h1>
+                <p className="mt-2 text-gray-600">配置系统参数</p>
+              </div>
+              <div className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-900/5">
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="text-6xl mb-4">⚙️</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">系统设置模块</h3>
+                  <p className="text-gray-600 text-center max-w-md">
+                    这里将显示系统配置选项，包括基本设置、通知设置、安全设置等。
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* 图表和活动列表 - 仅在仪表盘显示 */}
+          {activeMenu === 'dashboard' && (
+            <>
+              <div className="mt-8 grid gap-6 lg:grid-cols-3">
+                {/* 图表 */}
+                <div className="lg:col-span-2">
+                  <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
+                    <h2 className="text-lg font-semibold text-gray-900">周数据趋势</h2>
+                    <p className="mt-1 text-sm text-gray-600">过去7天的数据统计</p>
+
+                    <div className="mt-6 flex items-end justify-between gap-2 h-64">
+                      {chartData.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-1 flex-col items-center gap-2 group"
+                        >
+                          <div className="relative w-full flex items-end justify-center h-48 bg-gray-50 rounded-t-lg">
+                            <div
+                              className="w-full max-w-[40px] bg-blue-500 rounded-t-lg transition-all duration-300 group-hover:bg-blue-600"
+                              style={{ height: `${item.value}%` }}
+                            >
+                              <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded transition-opacity">
+                                {item.value}
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-xs text-gray-600">{item.label}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
 
-                <button className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
-                  查看全部
-                </button>
-              </div>
-            </div>
-          </div>
+                {/* 最近活动 */}
+                <div>
+                  <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
+                    <h2 className="text-lg font-semibold text-gray-900">最近活动</h2>
+                    <p className="mt-1 text-sm text-gray-600">最新的用户操作</p>
 
-          {/* 底部快速操作 */}
-          <div className="mt-8 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white shadow-lg">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="text-lg font-semibold">需要帮助？</h3>
-                <p className="mt-1 text-blue-100">
-                  查看我们的文档或联系支持团队
-                </p>
+                    <div className="mt-6 space-y-4">
+                      {recentActivities.map((activity, index) => (
+                        <div
+                          key={index}
+                          className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-lg">
+                            {activity.avatar}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900">
+                              {activity.user}
+                            </p>
+                            <p className="text-xs text-gray-600 truncate">
+                              {activity.action}
+                            </p>
+                            <p className="mt-1 text-xs text-gray-400">
+                              {activity.time}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+                      查看全部
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-3">
-                <button className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50">
-                  查看文档
-                </button>
-                <button className="rounded-lg border border-white px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10">
-                  联系支持
-                </button>
+
+              {/* 底部快速操作 */}
+              <div className="mt-8 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white shadow-lg">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">需要帮助？</h3>
+                    <p className="mt-1 text-blue-100">
+                      查看我们的文档或联系支持团队
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50">
+                      查看文档
+                    </button>
+                    <button className="rounded-lg border border-white px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10">
+                      联系支持
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </main>
       </div>
 
