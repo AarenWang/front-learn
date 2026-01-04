@@ -13,6 +13,16 @@ type Lesson = {
   difficulty: 'beginner' | 'intermediate' | 'advanced'
 }
 
+type Project = {
+  id: number
+  title: string
+  description: string
+  path: string
+  icon: string
+  features: string[]
+  difficulty: 'intermediate' | 'advanced'
+}
+
 const lessons: Lesson[] = [
   {
     id: 1,
@@ -292,6 +302,54 @@ module.exports = {
   }
 ]
 
+const projects: Project[] = [
+  {
+    id: 1,
+    title: 'Dashboard 布局',
+    description: '复杂的管理后台布局，包含侧边栏、数据可视化、响应式设计',
+    path: '/project/dashboard',
+    icon: '📊',
+    features: ['响应式侧边栏', '数据卡片', '图表展示', '实时活动列表'],
+    difficulty: 'intermediate'
+  },
+  {
+    id: 2,
+    title: '电商产品页',
+    description: '完整的电商产品详情页，包含图片画廊、颜色选择、评价系统',
+    path: '/project/ecommerce',
+    icon: '🛍️',
+    features: ['图片画廊', '颜色/尺码选择', '用户评价', '购买流程'],
+    difficulty: 'intermediate'
+  },
+  {
+    id: 3,
+    title: '登录认证页面',
+    description: '登录/注册/忘记密码页面，包含表单验证和错误提示',
+    path: '/project/login',
+    icon: '🔐',
+    features: ['表单验证', '加载状态', '错误提示', '社交登录'],
+    difficulty: 'intermediate'
+  },
+  {
+    id: 4,
+    title: 'SaaS Landing Page',
+    description: '专业的产品落地页，包含定价表、FAQ、客户评价',
+    path: '/project/saas',
+    icon: '🚀',
+    features: ['Hero 区域', '特性展示', '定价表', 'FAQ'],
+    difficulty: 'advanced'
+  },
+  {
+    id: 5,
+    title: '移动端 App 界面',
+    description: '移动优先的社交应用界面，包含信息流、通知、个人主页',
+    path: '/project/mobile',
+    icon: '📱',
+    features: ['Stories', '动态信息流', '底部导航', '手势交互'],
+    difficulty: 'advanced'
+  }
+]
+
 const difficultyColors = {
   beginner: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
   intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
@@ -352,6 +410,56 @@ export function TailwindLearningPage() {
                   {l.title}
                 </div>
               </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 进阶项目 */}
+        <div className="mb-8 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900/20 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">🚀 进阶实战项目</h2>
+            <Link
+              to="/"
+              className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              返回首页 →
+            </Link>
+          </div>
+          <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+            完成基础课程后，通过这些真实项目巩固所学知识
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {projects.map((project) => (
+              <Link
+                key={project.id}
+                to={project.path}
+                className="group bg-white dark:bg-slate-800 rounded-lg p-4 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg transition-all"
+              >
+                <div className="text-4xl mb-3">{project.icon}</div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColors[project.difficulty]}`}>
+                    {project.difficulty === 'intermediate' ? '进阶' : '高级'}
+                  </span>
+                </div>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                  {project.title}
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mb-3 line-clamp-2">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {project.features.slice(0, 2).map((feature, idx) => (
+                    <span key={idx} className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded">
+                      {feature}
+                    </span>
+                  ))}
+                  {project.features.length > 2 && (
+                    <span className="text-xs px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded">
+                      +{project.features.length - 2}
+                    </span>
+                  )}
+                </div>
+              </Link>
             ))}
           </div>
         </div>
