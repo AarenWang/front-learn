@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 type MenuItem = {
   icon: string
@@ -251,6 +252,23 @@ export function DashboardLayoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* 顶部导航栏 */}
+      <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center justify-between max-w-full">
+          <div className="flex items-center gap-4">
+            <Link
+              to="/tailwind-learning"
+              className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <span>←</span>
+              <span>返回课程</span>
+            </Link>
+            <span className="text-gray-300">|</span>
+            <h1 className="text-lg font-semibold text-gray-900">Dashboard 布局</h1>
+          </div>
+        </div>
+      </nav>
+
       {/* 侧边栏 */}
       <aside
         className={`fixed top-0 left-0 z-40 h-screen transition-transform duration-300 ${

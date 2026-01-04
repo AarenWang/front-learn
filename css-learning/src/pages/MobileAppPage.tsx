@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 type TabType = 'home' | 'explore' | 'notifications' | 'profile'
 
@@ -424,6 +425,21 @@ export function MobileAppPage() {
 
   return (
     <div className="mx-auto min-h-screen max-w-md bg-gray-50">
+      {/* 顶部导航栏 - 桌面端显示 */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3 md:hidden">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/tailwind-learning"
+            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <span>←</span>
+            <span>返回课程</span>
+          </Link>
+          <span className="text-gray-300">|</span>
+          <h1 className="text-sm font-semibold text-gray-900">移动端 App 界面</h1>
+        </div>
+      </div>
+
       {/* App Header - 仅在非首页显示 */}
       {activeTab !== 'home' && (
         <div className="sticky top-0 z-20 bg-white">

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 type TabType = 'login' | 'register' | 'forgot'
 
@@ -85,8 +86,26 @@ export function LoginAuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gray-50">
+      {/* 顶部导航栏 */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center gap-4">
+            <Link
+              to="/tailwind-learning"
+              className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <span>←</span>
+              <span>返回课程</span>
+            </Link>
+            <span className="text-gray-300">|</span>
+            <h1 className="text-lg font-semibold text-gray-900">登录认证页面</h1>
+          </div>
+        </div>
+      </nav>
+
+      <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
         {/* Logo 和标题 */}
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-3xl shadow-lg">
@@ -385,6 +404,7 @@ export function LoginAuthPage() {
         <p className="mt-8 text-center text-sm text-gray-600">
           © 2024 Your Company. All rights reserved.
         </p>
+      </div>
       </div>
     </div>
   )

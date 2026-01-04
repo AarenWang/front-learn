@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export function EcommerceProductPage() {
   const [selectedImage, setSelectedImage] = useState(0)
@@ -65,11 +66,16 @@ export function EcommerceProductPage() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="flex h-16 items-center justify-between px-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <a href="#" className="text-2xl">🏠</a>
+            <Link
+              to="/tailwind-learning"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <span>←</span>
+              <span>返回课程</span>
+            </Link>
+            <span className="text-gray-300">|</span>
             <nav className="hidden md:flex gap-6">
-              <a href="#" className="text-gray-600 hover:text-gray-900">首页</a>
-              <a href="#" className="text-gray-900 font-medium">产品详情</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900">评价</a>
+              <span className="text-gray-900 font-medium">电商产品页</span>
             </nav>
           </div>
           <div className="flex items-center gap-4">
